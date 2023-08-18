@@ -73,7 +73,7 @@ type DataRow = {
   dresscode: string;
   role: string;
   is_holiday: boolean;
-  [key: string]: number | string | boolean; // Use a mapped type to allow both number and string values
+  [key: string]: number | string | boolean;
 };
 
 export const getHoursByDresscodeAndRole = <T extends keyof DataRow>(
@@ -380,15 +380,14 @@ export const calculateSalary = (
   const amountHolidayCompensation = totalHours * holidayCompansation;
 
   //  calculate holiday salaries /////////////////////////////////////////////
-  // TODO should come from settings
-  const hourlyWageDayVestJunHoliday = 10.76;
-  const hourlyWageDayVestSenHoliday = 11.0;
-  const hourlyWageNightVestJunHoliday = 10.76;
-  const hourlyWageNightVestSenHoliday = 11.0;
-  const hourlyWageDaySuitJunHoliday = 10.76;
-  const hourlyWageDaySuitSenHoliday = 11.0;
-  const hourlyWageNightSuitJunHoliday = 10.76;
-  const hourlyWageNightSuitSenHoliday = 11.0;
+  const hourlyWageDayVestJunHoliday = settings.vest_jun_holiday;
+  const hourlyWageDayVestSenHoliday = settings.vest_sen_holiday;
+  const hourlyWageNightVestJunHoliday = settings.vest_jun_night_holiday;
+  const hourlyWageNightVestSenHoliday = settings.vest_sen_night_holiday;
+  const hourlyWageDaySuitJunHoliday = settings.suit_jun_holiday;
+  const hourlyWageDaySuitSenHoliday = settings.suit_sen_holiday;
+  const hourlyWageNightSuitJunHoliday = settings.suit_jun_night_holiday;
+  const hourlyWageNightSuitSenHoliday = settings.suit_sen_night_holiday;
 
   const amountVestDayJunHoliday =
     dayHoursVestJunHoliday * hourlyWageDayVestJunHoliday;

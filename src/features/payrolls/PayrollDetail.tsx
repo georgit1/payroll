@@ -11,15 +11,18 @@ import { styled } from 'styled-components';
 import PayrollCalculationTable from './PayrollCalculationTable';
 import TableLegend from '../../ui/TableLegend';
 import { legendColors } from '../../utils/helpers';
+import { useSettings } from '../settings/useSettings';
 
 const PayrollDetailLayout = styled.div`
   display: grid;
-  grid-template-columns: auto 56rem;
+  /* grid-template-columns: auto 52rem; */
+  grid-template-columns: 45rem auto;
   column-gap: 3rem;
 `;
 
 const PayrollDetail = () => {
   const { isLoading, jobs } = useJobsByDate();
+  const { settings } = useSettings();
   const { identifier } = useParams();
   const [year, month] = identifier?.split('-') ?? [];
   const moveBack = useMoveBack();
@@ -42,7 +45,9 @@ const PayrollDetail = () => {
           <PayrollJobTable jobs={jobs} />
           <TableLegend colors={legendColors} />
         </Row>
-        <PayrollCalculationTable jobs={jobs} />
+        {settings && (
+          <PayrollCalculationTable jobs={jobs} settings={settings} />
+        )}
       </PayrollDetailLayout>
     </>
   );

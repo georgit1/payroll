@@ -22,6 +22,7 @@ const Stacked = styled.div`
 const PayrollJobRow = ({ job }: { job: JobType }) => {
   const {
     id: jobId,
+    role,
     date,
     project,
     location,
@@ -42,22 +43,28 @@ const PayrollJobRow = ({ job }: { job: JobType }) => {
           borderLeft: '3px solid var(--color-blue-700)',
         }
       : {}),
+  };
+
+  const dateStyle: CSSProperties = {
     ...(isHoliday ? { fontWeight: 'bold', color: 'var(--color-red-700)' } : {}),
   };
 
   return (
     <Table.Row style={style}>
-      <div>{formatDate(date)}</div>
+      <div style={dateStyle}>{formatDate(date)}</div>
       <Stacked>
         <span>{project}</span>
         <span>{location}</span>
       </Stacked>
-      <Stacked>
+      {/* <Stacked>
         <span>{checkIn}</span>
         <span>{checkOut}</span>
-      </Stacked>
+      </Stacked> */}
       <Stacked>
-        <span>{removeTrailingZeros(totalTime)}</span>
+        <span>
+          {removeTrailingZeros(totalTime)}
+          {role}
+        </span>
         <span>{removeTrailingZeros(nightHours)}</span>
       </Stacked>
     </Table.Row>

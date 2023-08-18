@@ -94,14 +94,22 @@ export interface Database {
           night_allowance: number
           role: string
           suit_jun: number
+          suit_jun_holiday: number | null
           suit_jun_night: number
+          suit_jun_night_holiday: number | null
           suit_sen: number
+          suit_sen_holiday: number | null
           suit_sen_night: number
+          suit_sen_night_holiday: number | null
           user_id: string
           vest_jun: number
+          vest_jun_holiday: number | null
           vest_jun_night: number
+          vest_jun_night_holiday: number | null
           vest_sen: number
+          vest_sen_holiday: number | null
           vest_sen_night: number
+          vest_sen_night_holiday: number | null
         }
         Insert: {
           beginning_night_hours: string
@@ -114,14 +122,22 @@ export interface Database {
           night_allowance: number
           role: string
           suit_jun: number
+          suit_jun_holiday?: number | null
           suit_jun_night: number
+          suit_jun_night_holiday?: number | null
           suit_sen: number
+          suit_sen_holiday?: number | null
           suit_sen_night: number
+          suit_sen_night_holiday?: number | null
           user_id?: string
           vest_jun: number
+          vest_jun_holiday?: number | null
           vest_jun_night: number
+          vest_jun_night_holiday?: number | null
           vest_sen: number
+          vest_sen_holiday?: number | null
           vest_sen_night: number
+          vest_sen_night_holiday?: number | null
         }
         Update: {
           beginning_night_hours?: string
@@ -134,14 +150,22 @@ export interface Database {
           night_allowance?: number
           role?: string
           suit_jun?: number
+          suit_jun_holiday?: number | null
           suit_jun_night?: number
+          suit_jun_night_holiday?: number | null
           suit_sen?: number
+          suit_sen_holiday?: number | null
           suit_sen_night?: number
+          suit_sen_night_holiday?: number | null
           user_id?: string
           vest_jun?: number
+          vest_jun_holiday?: number | null
           vest_jun_night?: number
+          vest_jun_night_holiday?: number | null
           vest_sen?: number
+          vest_sen_holiday?: number | null
           vest_sen_night?: number
+          vest_sen_night_holiday?: number | null
         }
         Relationships: []
       }

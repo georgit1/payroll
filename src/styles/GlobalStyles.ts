@@ -37,6 +37,9 @@ const GlobalStyles = createGlobalStyle`
   --color-currentDay:#1967D2;
   --color-text-currentDay:  #f0f0f0;
   
+  /* Calculation table */
+  --color-result-row: #E5E7EB;
+  
   --backdrop-color: rgba(255, 255, 255, 0.1);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -81,6 +84,9 @@ const GlobalStyles = createGlobalStyle`
 --color-text-holiday-red: #111827;
 --color-currentDay:#0C3C70;
 --color-text-currentDay:  #f0f0f0;
+
+/* Calculation table */
+--color-result-row: #203c68;
 
 --backdrop-color: rgba(0, 0, 0, 0.3);
 

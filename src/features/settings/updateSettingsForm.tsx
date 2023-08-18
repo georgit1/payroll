@@ -99,7 +99,7 @@ const UpdateSettingsForm = () => {
         />
       </FormRow>
 
-      <FormRow label='Vest Junior €/hour Night'>
+      <FormRow label='Vest Junior Night €/hour'>
         <Input
           type='number'
           id='vest-jun-night'
@@ -123,7 +123,7 @@ const UpdateSettingsForm = () => {
         />
       </FormRow>
 
-      <FormRow label='Vest Senior €/hour Night'>
+      <FormRow label='Vest Senior Night €/hour'>
         <Input
           type='number'
           id='vest-sen-night'
@@ -147,7 +147,7 @@ const UpdateSettingsForm = () => {
         />
       </FormRow>
 
-      <FormRow label='Suit Junior €/hour Night'>
+      <FormRow label='Suit Junior Night €/hour'>
         <Input
           type='number'
           id='suit-jun-night'
@@ -171,7 +171,7 @@ const UpdateSettingsForm = () => {
         />
       </FormRow>
 
-      <FormRow label='Suit Senior €/hour Night'>
+      <FormRow label='Suit Senior Night €/hour'>
         <Input
           type='number'
           id='suit-sen-night'
@@ -182,6 +182,104 @@ const UpdateSettingsForm = () => {
           }
         />
       </FormRow>
+
+      {/* //////////////////////////////////// */}
+      <FormRow label='Vest Junior Holiday €/hour'>
+        <Input
+          type='number'
+          id='vest-jun-holiday'
+          defaultValue={settings?.vest_jun_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdate(e, 'vest_jun_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Vest Junior Night Holiday €/hour'>
+        <Input
+          type='number'
+          id='vest-jun-night-holiday'
+          defaultValue={settings?.vest_jun_night_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdate(e, 'vest_jun_night_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Vest Senior Holiday €/hour'>
+        <Input
+          type='number'
+          id='vest-sen-holiday'
+          defaultValue={settings?.vest_sen_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdate(e, 'vest_sen_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Vest Senior Night Holiday €/hour'>
+        <Input
+          type='number'
+          id='vest-sen-night-holiday'
+          defaultValue={settings?.vest_sen_night_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdate(e, 'vest_sen_night_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Suit Junior Holiday €/hour'>
+        <Input
+          type='number'
+          id='suit-jun-holiday'
+          defaultValue={settings?.suit_jun_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdate(e, 'suit_jun_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Suit Junior Night Holiday €/hour'>
+        <Input
+          type='number'
+          id='suit-jun-night-holiday'
+          defaultValue={settings?.suit_jun_night_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdate(e, 'suit_jun_night_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Suit Senior Holiday €/hour'>
+        <Input
+          type='number'
+          id='suit-sen-holiday'
+          defaultValue={settings?.suit_sen_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdate(e, 'suit_sen_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Suit Senior Night Holiday €/hour'>
+        <Input
+          type='number'
+          id='suit-sen-night'
+          defaultValue={settings?.suit_sen_night_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdate(e, 'suit_sen_night_holiday')
+          }
+        />
+      </FormRow>
+      {/* //////////////////////////////////// */}
 
       <FormRow label='Night Allowance'>
         <Input

@@ -34,6 +34,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // darkMode colors
 // calendar should start on Monday
 // if holiday.csv added after already added holiday job -> add csv -> delete job -> add job again
+// indicate jun and sen role in table (mainly beacause of Calculation table to check results)
+// PayrollCalculationTable dont show holiday day
 
 // typescript
 // useElementRef: https://www.youtube.com/watch?v=JuULWGuoI1A

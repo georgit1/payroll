@@ -107,13 +107,16 @@ const JobRow = ({ job }: { job: JobType }) => {
           borderLeft: '3px solid var(--color-blue-700)',
         }
       : {}),
+  };
+
+  const dateStyle: CSSProperties = {
     ...(isHoliday ? { fontWeight: 'bold', color: 'var(--color-red-700)' } : {}),
   };
 
   return (
     // <Table.Row style={dresscode === 'suit' ? style : undefined}>
     <Table.Row style={style}>
-      <div>{formatDate(date)}</div>
+      <div style={dateStyle}>{formatDate(date)}</div>
       <div>{project}</div>
       <div>{location}</div>
       <div>{checkIn}</div>

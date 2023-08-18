@@ -85,7 +85,8 @@ export const getJobsByDate = async (month: number, year: number) => {
     .from('jobs')
     .select('*')
     .gte('date', startDate.toISOString())
-    .lte('date', endDate.toISOString());
+    .lte('date', endDate.toISOString())
+    .order('date');
 
   if (error) {
     console.error(error);

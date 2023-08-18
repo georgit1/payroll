@@ -19,4 +19,12 @@ export const defaultSettings: Settings = {
   suit_jun_night: 11.47,
   suit_sen: 12.32,
   suit_sen_night: 11.93,
+  vest_jun_holiday: 10.76,
+  vest_jun_night_holiday: 10.76,
+  vest_sen_holiday: 11.0,
+  vest_sen_night_holiday: 11.0,
+  suit_jun_holiday: 10.76,
+  suit_jun_night_holiday: 10.76,
+  suit_sen_holiday: 11.0,
+  suit_sen_night_holiday: 11.0,
 };

@@ -1,6 +1,4 @@
-import Table from '../../ui/Table';
-import { JobType } from '../../types/collection';
-import PayrollJobRow from './PayrollJobRow';
+import { JobType, SettingsType } from '../../types/collection';
 import { styled } from 'styled-components';
 
 const StyledTable = styled.div`
@@ -40,16 +38,137 @@ const StyledRow = styled(CommonRow)`
   }
 `;
 
+const StyledResultRow = styled(CommonRow)`
+  background-color: var(--color-result-row);
+  padding: 1.2rem 2.4rem;
+  font-weight: 700;
+`;
+
 const StyledBody = styled.section`
   margin: 0.4rem 0;
 `;
 
 type PayrollJobTableProps = {
   jobs: JobType[];
+  settings: SettingsType;
 };
 
-const PayrollCalculationTable = ({ jobs }: PayrollJobTableProps) => {
+type Role = 'jun' | 'sen';
+type Dresscode = 'vest' | 'suit';
+
+const PayrollCalculationTable = ({ jobs, settings }: PayrollJobTableProps) => {
   console.log(jobs);
+
+  const calculateHoursAndAmounts = (
+    role: Role,
+    dresscode: Dresscode,
+    isHoliday: boolean = false
+  ) => {
+    const filteredJobs = jobs.filter(
+      (job) =>
+        // !job.is_holiday &&
+        job.dresscode === dresscode &&
+        job.role === role &&
+        job.is_holiday === isHoliday
+    );
+
+    const totalHours = filteredJobs.reduce(
+      (sum, cur) => sum + cur.total_hours,
+      0
+    );
+    const nightHours = filteredJobs.reduce(
+      (sum, cur) => sum + cur.night_hours,
+      0
+    );
+    const dayHours = totalHours - nightHours;
+
+    let dayRate;
+    let nightRate;
+
+    if (!isHoliday) {
+      dayRate = settings[`${dresscode}_${role}`];
+      nightRate = settings[`${dresscode}_${role}_night`];
+    }
+
+    if (isHoliday) {
+      dayRate = settings[`${dresscode}_${role}_holiday`];
+      nightRate = settings[`${dresscode}_${role}_night_holiday`];
+    }
+
+    const amountDayHours = dayRate * dayHours;
+    const amountNightHours = nightRate * nightHours;
+
+    return {
+      totalHours,
+      nightHours,
+      dayHours,
+      amountDayHours,
+      amountNightHours,
+    };
+  };
+
+  const junVestData = calculateHoursAndAmounts('jun', 'vest');
+  const junSuitData = calculateHoursAndAmounts('jun', 'suit');
+
+  const senVestData = calculateHoursAndAmounts('sen', 'vest');
+  const senSuitData = calculateHoursAndAmounts('sen', 'suit');
+
+  const junVestHolidayData = calculateHoursAndAmounts('jun', 'vest', true);
+  const junSuitHolidayData = calculateHoursAndAmounts('jun', 'suit', true);
+
+  const senVestHolidayData = calculateHoursAndAmounts('sen', 'vest', true);
+  const senSuitHolidayData = calculateHoursAndAmounts('sen', 'suit', true);
+
+  // holiday calculation
+  // const amountVestJunHolidaySurcharge =
+  //   totalHoursVestJunHoliday * hourlyWageDayVestJunHoliday +
+  //   totalNightHoursVestJunHoliday * nightAllowance;
+
+  // const amountVestSenHolidaySurcharge =
+  //   totalHoursVestSenHoliday * hourlyWageDayVestSenHoliday +
+  //   totalNightHoursVestSenHoliday * nightAllowance;
+
+  // const amountSuitJunHolidaySurcharge =
+  //   totalHoursSuitJunHoliday * hourlyWageDaySuitJunHoliday +
+  //   totalNightHoursSuitJunHoliday * nightAllowance;
+
+  // const amountSuitSenHolidaySurcharge =
+  //   totalHoursSuitSenHoliday * hourlyWageDaySuitSenHoliday +
+  //   totalNightHoursSuitSenHoliday * nightAllowance;
+
+  console.log(junVestHolidayData);
+
+  // night allowance
+  const totalHoursNightAllowance =
+    junVestData.nightHours +
+    junSuitData.nightHours +
+    senVestData.nightHours +
+    senSuitData.nightHours;
+  const amountNightAllowance =
+    totalHoursNightAllowance * settings.night_allowance;
+
+  // holiday compensation
+  const totalHoursHolidayCompenastion =
+    junVestData.totalHours +
+    junSuitData.totalHours +
+    senVestData.totalHours +
+    senSuitData.totalHours;
+  const amountHolidayCompensation =
+    totalHoursHolidayCompenastion * settings.holiday_compensation;
+
+  // total amount
+  const totalAmount =
+    junVestData.amountDayHours +
+    junVestData.amountNightHours +
+    junSuitData.amountDayHours +
+    junSuitData.amountNightHours +
+    senVestData.amountDayHours +
+    senVestData.amountNightHours +
+    senSuitData.amountDayHours +
+    senSuitData.amountNightHours +
+    amountNightAllowance +
+    amountHolidayCompensation;
+
   return (
     <StyledTable role='table'>
       <StyledHeader role='row' as='header'>
@@ -59,30 +178,90 @@ const PayrollCalculationTable = ({ jobs }: PayrollJobTableProps) => {
         <div>amount(€)</div>
       </StyledHeader>
       <StyledBody>
+        {junVestData.totalHours !== 0 && (
+          <>
+            <StyledRow role='row'>
+              <div>Sec FW jun T</div>
+              <div>{junVestData.dayHours.toFixed(2)}</div>
+              <div>{settings.vest_jun}</div>
+              <div>{junVestData.amountDayHours.toFixed(2)}</div>
+            </StyledRow>
+            <StyledRow role='row'>
+              <div>Sec FW jun N</div>
+              <div>{junVestData.nightHours.toFixed(2)}</div>
+              <div>{settings.vest_jun_night}</div>
+              <div>{junVestData.amountNightHours.toFixed(2)}</div>
+            </StyledRow>
+          </>
+        )}
+        {junSuitData.totalHours !== 0 && (
+          <>
+            <StyledRow role='row'>
+              <div>Sec Anz FW jun T</div>
+              <div>{junSuitData.dayHours.toFixed(2)}</div>
+              <div>{settings.suit_jun}</div>
+              <div>{junSuitData.amountDayHours.toFixed(2)}</div>
+            </StyledRow>
+            <StyledRow role='row'>
+              <div>Sec Anz FW jun N</div>
+              <div>{junSuitData.nightHours.toFixed(2)}</div>
+              <div>{settings.suit_jun_night}</div>
+              <div>{junSuitData.amountNightHours.toFixed(2)}</div>
+            </StyledRow>
+          </>
+        )}
+        {senVestData.totalHours !== 0 && (
+          <>
+            <StyledRow role='row'>
+              <div>Sec FW sen T</div>
+              <div>{senVestData.dayHours.toFixed(2)}</div>
+              <div>{settings.vest_sen}</div>
+              <div>{senVestData.amountDayHours.toFixed(2)}</div>
+            </StyledRow>
+            <StyledRow role='row'>
+              <div>Sec FW sen N</div>
+              <div>{senVestData.nightHours.toFixed(2)}</div>
+              <div>{settings.vest_sen_night}</div>
+              <div>{senVestData.amountNightHours.toFixed(2)}</div>
+            </StyledRow>
+          </>
+        )}
+        {senSuitData.totalHours !== 0 && (
+          <>
+            <StyledRow role='row'>
+              <div>Sec Anz FW sen T</div>
+              <div>{senSuitData.dayHours.toFixed(2)}</div>
+              <div>{settings.suit_sen}</div>
+              <div>{senSuitData.amountDayHours.toFixed(2)}</div>
+            </StyledRow>
+            <StyledRow role='row'>
+              <div>Sec Anz FW sen N</div>
+              <div>{senSuitData.nightHours.toFixed(2)}</div>
+              <div>{settings.suit_sen_night}</div>
+              <div>{senSuitData.amountNightHours.toFixed(2)}</div>
+            </StyledRow>
+          </>
+        )}
         <StyledRow role='row'>
-          <div>dsf</div>
-          <div>dsf</div>
-          <div>dsf</div>
-          <div>dsf</div>
+          <div>Night Allowance</div>
+          <div>{totalHoursNightAllowance.toFixed(2)}</div>
+          <div>{settings.night_allowance}</div>
+          <div>{amountNightAllowance.toFixed(2)}</div>
         </StyledRow>
-        <StyledRow>hsll</StyledRow>
-        <StyledRow>hsll</StyledRow>
-        <StyledRow>hsll</StyledRow>
+        <StyledRow role='row'>
+          <div>Holiday Compensation</div>
+          <div>{totalHoursHolidayCompenastion.toFixed(2)}</div>
+          <div>{settings.holiday_compensation}</div>
+          <div>{amountHolidayCompensation.toFixed(2)}</div>
+        </StyledRow>
+        <StyledResultRow role='row'>
+          <div>Total</div>
+          <div></div>
+          <div></div>
+          <div>{totalAmount.toFixed(2)}</div>
+        </StyledResultRow>
       </StyledBody>
     </StyledTable>
-    // <Table columns='1fr 1fr 1fr 1fr'>
-    //   <Table.Header>
-    //     <div>fee</div>
-    //     <div>quantity(h)</div>
-    //     <div>rate</div>
-    //     <div>amount(€)</div>
-    //   </Table.Header>
-
-    //   <Table.Body
-    //     data={jobs || []}
-    //     render={(job: JobType) => <PayrollJobRow job={job} key={job.id} />}
-    //   />
-    // </Table>
   );
 };
 
