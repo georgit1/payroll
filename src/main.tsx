@@ -36,6 +36,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // if holiday.csv added after already added holiday job -> add csv -> delete job -> add job again
 // indicate jun and sen role in table (mainly beacause of Calculation table to check results)
 // PayrollCalculationTable dont show holiday day
+// used 0,43 for both roles and dresscode on night holiday surcharge
 
 // typescript
 // useElementRef: https://www.youtube.com/watch?v=JuULWGuoI1A

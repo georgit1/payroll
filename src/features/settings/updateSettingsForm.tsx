@@ -279,6 +279,18 @@ const UpdateSettingsForm = () => {
           }
         />
       </FormRow>
+
+      <FormRow label='Night Holiday Surcharge €/hour (all roles)'>
+        <Input
+          type='number'
+          id='night-holiday-surcharge'
+          defaultValue={settings?.night_holiday_surcharge}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdate(e, 'night_holiday_surcharge')
+          }
+        />
+      </FormRow>
       {/* //////////////////////////////////// */}
 
       <FormRow label='Night Allowance'>

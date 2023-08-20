@@ -92,24 +92,25 @@ export interface Database {
           id: number
           insignificance_limit: number
           night_allowance: number
+          night_holiday_surcharge: number
           role: string
           suit_jun: number
-          suit_jun_holiday: number | null
+          suit_jun_holiday: number
           suit_jun_night: number
-          suit_jun_night_holiday: number | null
+          suit_jun_night_holiday: number
           suit_sen: number
-          suit_sen_holiday: number | null
+          suit_sen_holiday: number
           suit_sen_night: number
-          suit_sen_night_holiday: number | null
+          suit_sen_night_holiday: number
           user_id: string
           vest_jun: number
-          vest_jun_holiday: number | null
+          vest_jun_holiday: number
           vest_jun_night: number
-          vest_jun_night_holiday: number | null
+          vest_jun_night_holiday: number
           vest_sen: number
-          vest_sen_holiday: number | null
+          vest_sen_holiday: number
           vest_sen_night: number
-          vest_sen_night_holiday: number | null
+          vest_sen_night_holiday: number
         }
         Insert: {
           beginning_night_hours: string
@@ -120,24 +121,25 @@ export interface Database {
           id?: number
           insignificance_limit?: number
           night_allowance: number
+          night_holiday_surcharge: number
           role: string
           suit_jun: number
-          suit_jun_holiday?: number | null
+          suit_jun_holiday: number
           suit_jun_night: number
-          suit_jun_night_holiday?: number | null
+          suit_jun_night_holiday: number
           suit_sen: number
-          suit_sen_holiday?: number | null
+          suit_sen_holiday: number
           suit_sen_night: number
-          suit_sen_night_holiday?: number | null
+          suit_sen_night_holiday: number
           user_id?: string
           vest_jun: number
-          vest_jun_holiday?: number | null
+          vest_jun_holiday: number
           vest_jun_night: number
-          vest_jun_night_holiday?: number | null
+          vest_jun_night_holiday: number
           vest_sen: number
-          vest_sen_holiday?: number | null
+          vest_sen_holiday: number
           vest_sen_night: number
-          vest_sen_night_holiday?: number | null
+          vest_sen_night_holiday: number
         }
         Update: {
           beginning_night_hours?: string
@@ -148,24 +150,25 @@ export interface Database {
           id?: number
           insignificance_limit?: number
           night_allowance?: number
+          night_holiday_surcharge?: number
           role?: string
           suit_jun?: number
-          suit_jun_holiday?: number | null
+          suit_jun_holiday?: number
           suit_jun_night?: number
-          suit_jun_night_holiday?: number | null
+          suit_jun_night_holiday?: number
           suit_sen?: number
-          suit_sen_holiday?: number | null
+          suit_sen_holiday?: number
           suit_sen_night?: number
-          suit_sen_night_holiday?: number | null
+          suit_sen_night_holiday?: number
           user_id?: string
           vest_jun?: number
-          vest_jun_holiday?: number | null
+          vest_jun_holiday?: number
           vest_jun_night?: number
-          vest_jun_night_holiday?: number | null
+          vest_jun_night_holiday?: number
           vest_sen?: number
-          vest_sen_holiday?: number | null
+          vest_sen_holiday?: number
           vest_sen_night?: number
-          vest_sen_night_holiday?: number | null
+          vest_sen_night_holiday?: number
         }
         Relationships: []
       }

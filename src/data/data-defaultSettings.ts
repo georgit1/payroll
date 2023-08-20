@@ -27,4 +27,5 @@ export const defaultSettings: Settings = {
   suit_jun_night_holiday: 10.76,
   suit_sen_holiday: 11.0,
   suit_sen_night_holiday: 11.0,
+  night_holiday_surcharge: 0.43,
 };
