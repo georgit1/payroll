@@ -1,6 +1,10 @@
 import { JobType } from '../../types/collection';
 import Table from '../../ui/Table';
-import { formatDate, removeTrailingZeros } from '../../utils/helpers';
+import {
+  capitalizeFirstLetter,
+  formatDate,
+  removeTrailingZeros,
+} from '../../utils/helpers';
 import { CSSProperties } from 'react';
 import { styled } from 'styled-components';
 
@@ -52,19 +56,13 @@ const PayrollJobRow = ({ job }: { job: JobType }) => {
   return (
     <Table.Row style={style}>
       <div style={dateStyle}>{formatDate(date)}</div>
+      <div>{capitalizeFirstLetter(role)}</div>
       <Stacked>
         <span>{project}</span>
         <span>{location}</span>
       </Stacked>
-      {/* <Stacked>
-        <span>{checkIn}</span>
-        <span>{checkOut}</span>
-      </Stacked> */}
       <Stacked>
-        <span>
-          {removeTrailingZeros(totalTime)}
-          {role}
-        </span>
+        <span>{removeTrailingZeros(totalTime)}</span>
         <span>{removeTrailingZeros(nightHours)}</span>
       </Stacked>
     </Table.Row>

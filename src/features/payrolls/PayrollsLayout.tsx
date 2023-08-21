@@ -21,6 +21,11 @@ const StyledPayrollsLayout = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 2.4rem;
+
+  /* iPad Mini */
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+  }
 `;
 
 const PayrollsLayout = () => {

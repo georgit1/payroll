@@ -22,11 +22,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // use .env file in supabase.ts
 // only fetch neccessary columns
 // performance check, especially network requests (all hooks), Calendar days
+// lightHouse opimizitaion
 // test evereything without holiday file
 // console errors
 // sort css props
 
-// add holiday inputs in settings and use in calculateSalary
 // PayrollCalculationTable
 // useMemo in context in compound comp. (Modal.tsx -> https://codesandbox.io/s/compound-react-components-with-hooks-typescript-vpvdq?file=/src/Tabs/Tabs.tsx)
 // prevent scrolling on open menu
@@ -35,8 +35,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // calendar should start on Monday
 // if holiday.csv added after already added holiday job -> add csv -> delete job -> add job again
 // indicate jun and sen role in table (mainly beacause of Calculation table to check results)
-// PayrollCalculationTable dont show holiday day
 // used 0,43 for both roles and dresscode on night holiday surcharge
+// dashboard stats
 
 // typescript
 // useElementRef: https://www.youtube.com/watch?v=JuULWGuoI1A

@@ -12,6 +12,12 @@ const StyledStat = styled.div`
   grid-template-rows: auto auto;
   column-gap: 1.2rem;
   row-gap: 0.4rem;
+
+  /* iPad Mini */
+  @media (max-width: 1024px) {
+    padding: 0.8rem;
+    column-gap: 0.8rem;
+  }
 `;
 
 const Icon = styled.div`

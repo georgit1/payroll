@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
-
+  height: fit-content;
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
@@ -12,7 +12,7 @@ const StyledTable = styled.div`
 
 const CommonRow = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1.2fr 0.6fr 0.6fr 0.8fr;
   column-gap: 2.4rem;
   align-items: center;
   transition: none;

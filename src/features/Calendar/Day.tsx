@@ -30,13 +30,19 @@ const StyledDay = styled.div<StyledDayProps>`
   height: 13rem;
   border: 1px solid var(--color-grey-200);
   border-radius: 0.5rem;
+  overflow: hidden;
 
   ${({ isHoliday }) =>
     isHoliday &&
     `
     color: var(--color-text-holiday-red);
     background-color: var(--color-holiday-red);
-  `}
+  `};
+
+  /* iPad Mini */
+  @media (max-width: 1024px) {
+    height: 10rem;
+  }
 `;
 
 const StyledHeader = styled.header`

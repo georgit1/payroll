@@ -1,6 +1,4 @@
 import { useForm } from 'react-hook-form';
-// import { z } from 'zod';
-// import { zodResolver } from '@hookform/resolvers/zod';
 
 import Input from '../../ui/Input';
 import Form from '../../ui/Form';
@@ -22,15 +20,7 @@ import { useUser } from '../authentication/useUser';
 import { useJobs } from './useJobs';
 import { toast } from 'react-hot-toast';
 
-// const FormValidator = z.object({
-//   date: z.date(),
-//   location: z.string(),
-//   project: z.string(),
-//   // start_time: z.time
-// });
-
 const Box = styled.div`
-  /* Box */
   background-color: var(--color-grey-50);
   border: 1px solid var(--color-grey-100);
   border-radius: var(--border-radius-md);
@@ -89,6 +79,11 @@ const CreateJobForm = ({
 
     if (isEditSession) {
       if (!settings) throw new Error('settings not available');
+
+      // prevent to set more than one job on same date
+      const jobWithSameDate = jobs?.find((job) => job.date === data.date);
+      if (jobWithSameDate)
+        return toast.error('Job already exists on this date');
 
       // calculate total hours and night hours
       const { check_in, check_out } = data;
@@ -190,7 +185,8 @@ const CreateJobForm = ({
         <Input
           type='date'
           id='date'
-          disabled={isEditSession || isWorking}
+          disabled={isWorking}
+          // disabled={isEditSession || isWorking}
           {...register('date', {
             required: 'This field is required',
           })}

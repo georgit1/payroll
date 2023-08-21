@@ -20,8 +20,13 @@ const StyledPayroll = styled.div`
 
   & button {
     grid-column: 3/4;
-
     margin: 1.2rem;
+
+    /* iPad Mini */
+    @media (max-width: 1024px) {
+      grid-column: 2/4;
+      margin: 0 1rem 1rem 10rem;
+    }
   }
 `;
 

@@ -15,8 +15,7 @@ import { useSettings } from '../settings/useSettings';
 
 const PayrollDetailLayout = styled.div`
   display: grid;
-  /* grid-template-columns: auto 52rem; */
-  grid-template-columns: 45rem auto;
+  grid-template-columns: 48rem auto;
   column-gap: 3rem;
 `;
 
