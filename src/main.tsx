@@ -24,6 +24,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // performance check, especially network requests (all hooks), Calendar days
 // lightHouse opimizitaion
 // test evereything without holiday file
+// delete user
 // console errors
 // sort css props
 

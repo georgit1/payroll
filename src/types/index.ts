@@ -1,7 +1,8 @@
-import { JobType, SettingsType } from './collection';
+import { JobType, SettingsType, WageType } from './collection';
 
 export type Job = Omit<JobType, 'created_at' | 'id'>;
 export type Settings = Omit<SettingsType, 'created_at' | 'id' | 'user_id'>;
+export type Wage = Omit<WageType, 'created_at' | 'id' | 'user_id'>;
 
 export type SalaryOptions = {
   [key: string]: number;

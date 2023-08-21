@@ -1,4 +1,4 @@
-import { defaultSettings } from '../data/data-defaultSettings';
+import { defaultSettings, defaultWage } from '../data/data-defaultValues';
 import {
   LoginProps,
   SignUpProps,
@@ -27,6 +27,13 @@ export const signup = async ({ fullName, email, password }: SignUpProps) => {
     .insert([{ user_id: data.user?.id, ...defaultSettings }]);
 
   if (settingsError) throw new Error(settingsError.message);
+
+  // insert default wage values into the "wage" table
+  const { error: wageError } = await supabase
+    .from('wage')
+    .insert([{ user_id: data.user?.id, ...defaultWage }]);
+
+  if (wageError) throw new Error(wageError.message);
 
   return data;
 };

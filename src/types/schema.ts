@@ -172,6 +172,90 @@ export interface Database {
         }
         Relationships: []
       }
+      wage: {
+        Row: {
+          base_wage: number | null
+          created_at: string
+          holiday_compensation_rate: number | null
+          holidays: Json | null
+          id: number
+          insignificance_limit: number | null
+          night_allowance_rate: number | null
+          overpayment_jun_suit: number | null
+          overpayment_jun_suit_holiday: number | null
+          overpayment_jun_suit_night: number | null
+          overpayment_jun_suit_night_holiday: number | null
+          overpayment_jun_vest: number | null
+          overpayment_jun_vest_holiday: number | null
+          overpayment_jun_vest_night: number | null
+          overpayment_jun_vest_night_holiday: number | null
+          overpayment_sen_suit: number | null
+          overpayment_sen_suit_holiday: number | null
+          overpayment_sen_suit_night: number | null
+          overpayment_sen_suit_night_holiday: number | null
+          overpayment_sen_vest: number | null
+          overpayment_sen_vest_holiday: number | null
+          overpayment_sen_vest_night: number | null
+          overpayment_sen_vest_night_holiday: number | null
+          user_id: string | null
+          year: string | null
+        }
+        Insert: {
+          base_wage?: number | null
+          created_at?: string
+          holiday_compensation_rate?: number | null
+          holidays?: Json | null
+          id?: number
+          insignificance_limit?: number | null
+          night_allowance_rate?: number | null
+          overpayment_jun_suit?: number | null
+          overpayment_jun_suit_holiday?: number | null
+          overpayment_jun_suit_night?: number | null
+          overpayment_jun_suit_night_holiday?: number | null
+          overpayment_jun_vest?: number | null
+          overpayment_jun_vest_holiday?: number | null
+          overpayment_jun_vest_night?: number | null
+          overpayment_jun_vest_night_holiday?: number | null
+          overpayment_sen_suit?: number | null
+          overpayment_sen_suit_holiday?: number | null
+          overpayment_sen_suit_night?: number | null
+          overpayment_sen_suit_night_holiday?: number | null
+          overpayment_sen_vest?: number | null
+          overpayment_sen_vest_holiday?: number | null
+          overpayment_sen_vest_night?: number | null
+          overpayment_sen_vest_night_holiday?: number | null
+          user_id?: string | null
+          year?: string | null
+        }
+        Update: {
+          base_wage?: number | null
+          created_at?: string
+          holiday_compensation_rate?: number | null
+          holidays?: Json | null
+          id?: number
+          insignificance_limit?: number | null
+          night_allowance_rate?: number | null
+          overpayment_jun_suit?: number | null
+          overpayment_jun_suit_holiday?: number | null
+          overpayment_jun_suit_night?: number | null
+          overpayment_jun_suit_night_holiday?: number | null
+          overpayment_jun_vest?: number | null
+          overpayment_jun_vest_holiday?: number | null
+          overpayment_jun_vest_night?: number | null
+          overpayment_jun_vest_night_holiday?: number | null
+          overpayment_sen_suit?: number | null
+          overpayment_sen_suit_holiday?: number | null
+          overpayment_sen_suit_night?: number | null
+          overpayment_sen_suit_night_holiday?: number | null
+          overpayment_sen_vest?: number | null
+          overpayment_sen_vest_holiday?: number | null
+          overpayment_sen_vest_night?: number | null
+          overpayment_sen_vest_night_holiday?: number | null
+          user_id?: string | null
+          year?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
