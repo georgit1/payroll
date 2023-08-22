@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { SettingsType } from '../../types/collection';
+import { useEffect, useRef, useState } from 'react';
+import { SettingsType, WageType } from '../../types/collection';
 import FileInput from '../../ui/FileInput';
 import Form from '../../ui/Form';
 import FormRow from '../../ui/FormRow';
@@ -13,6 +13,12 @@ import { styled } from 'styled-components';
 import Modal from '../../ui/Modal';
 import { HiOutlineInformationCircle } from 'react-icons/hi2';
 import HolidayInfo from './HolidayInfo';
+import { useWage } from './useWage';
+import { useUpdateWage } from './useUpdateWage';
+import Button from '../../ui/Button';
+import { useAddWage } from './useAddWage';
+import { defaultWage } from '../../data/data-defaultValues';
+import { toast } from 'react-hot-toast';
 
 const Error = styled.span`
   font-size: 1.4rem;
@@ -25,9 +31,50 @@ const Info = styled.span`
 `;
 
 const UpdateSettingsForm = () => {
-  const { isLoading, settings } = useSettings();
-  const { isUpdating, updateSetting } = useUpdateSetting();
+  const [selectedYear, setSelectedYear] = useState(
+    new Date().getFullYear().toString()
+  );
+  const [newYear, setNewYear] = useState('');
+  const [selectOptYear, setSelectOptYear] = useState<
+    { value: string; label: string }[] | null
+  >(null);
+  const [yearError, setYearError] = useState('');
+
+  const { isLoading: isLoading1, settings } = useSettings();
+  const { isUpdating: isUpdatingSettings, updateSetting } = useUpdateSetting();
+  const { isUpdating: isUpdatingWage, updateWage } =
+    useUpdateWage(selectedYear);
+
+  const { isLoading: isLoading2, wage } = useWage(selectedYear);
+  const { addWage, isAdding } = useAddWage();
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // const yearInputRef = useRef<HTMLInputElement>(null);
+
+  const currentWage = wage?.find((wage) => wage.year === selectedYear);
+  const yearsCollection = wage?.map((item) => item.year);
+
+  const isUpdating = isUpdatingSettings || isUpdatingWage;
+
+  // set the selectOptions as soon as they get received from the database
+  useEffect(() => {
+    if (yearsCollection) {
+      const mappedOptions = yearsCollection.map((year) => ({
+        value: year,
+        label: year,
+      }));
+
+      // Check if selectOptYear is different before updating it
+      if (
+        !selectOptYear ||
+        JSON.stringify(mappedOptions) !== JSON.stringify(selectOptYear)
+      ) {
+        setSelectOptYear(mappedOptions);
+      }
+    }
+  }, [yearsCollection, selectOptYear]);
+
+  if (isLoading1 || isLoading2) return <Spinner />;
 
   // typescrpt helper
   const holidaysData = settings?.holidays as {
@@ -38,9 +85,8 @@ const UpdateSettingsForm = () => {
   const isEmptyFile = holidaysData?.dates.length === 0;
   const currentFileName = holidaysData?.fileName;
 
-  if (isLoading) return <Spinner />;
-
-  async function handleUpdate(
+  // Function to handle updating settings values
+  async function handleUpdateSetting(
     e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>,
     field: Partial<keyof SettingsType>
   ) {
@@ -68,7 +114,46 @@ const UpdateSettingsForm = () => {
     }
   }
 
-  const selectOpt = [
+  const handleAddYear = () => {
+    setYearError('');
+
+    if (!newYear) return;
+
+    if (newYear.length !== 4) {
+      setYearError('Year must have 4 characters');
+      return;
+    }
+
+    if (yearsCollection?.includes(newYear))
+      return toast.error('Year already exists.');
+
+    const newSelectOption = { value: newYear, label: newYear };
+    setSelectOptYear([...(selectOptYear ?? []), newSelectOption]);
+    setSelectedYear(newYear);
+    setNewYear('');
+
+    addWage({ ...defaultWage, year: newYear });
+  };
+
+  // Function to handle updating wage values
+  async function handleUpdateWage(
+    e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>,
+    field: Partial<keyof WageType>
+  ) {
+    const { value } = e.target;
+
+    // dont update if no value or value hasn't changed
+    if (
+      !value ||
+      currentWage?.[field] === value ||
+      currentWage?.[field] === Number(value)
+    )
+      return;
+
+    updateWage({ [field]: value });
+  }
+
+  const selectOptRole = [
     { value: 'jun', label: 'Junior' },
     { value: 'sen', label: 'Senior' },
   ];
@@ -78,229 +163,77 @@ const UpdateSettingsForm = () => {
       <FormRow label='Junior/Senior'>
         <Select
           id='role'
-          options={selectOpt}
+          options={selectOptRole}
           defaultValue={settings?.role === 'jun' ? 'jun' : 'sen'}
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLSelectElement>) =>
-            handleUpdate(e, 'role')
+            handleUpdateSetting(e, 'role')
           }
         />
       </FormRow>
 
-      <FormRow label='Vest Junior €/hour'>
+      <FormRow label='Add year' error={yearError}>
         <Input
           type='number'
-          id='vest-jun'
-          defaultValue={settings?.vest_jun}
+          id='new-year-input'
+          placeholder='e.g. 2023'
+          // value={newYear}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setNewYear(e.target.value)
+          }
+        />
+        <Button type='button' onClick={handleAddYear}>
+          Add New Year
+        </Button>
+      </FormRow>
+
+      <FormRow label='Year'>
+        <Select
+          id='year'
+          options={selectOptYear || []}
+          defaultValue={selectedYear}
+          disabled={isUpdating}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            setSelectedYear(e.target.value);
+          }}
+          // onChange={handleChangeYear}
+        />
+      </FormRow>
+
+      <FormRow label='Base Wage'>
+        <Input
+          type='number'
+          id='base-wage'
+          defaultValue={currentWage?.base_wage}
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'vest_jun')
+            handleUpdateWage(e, 'base_wage')
           }
         />
       </FormRow>
 
-      <FormRow label='Vest Junior Night €/hour'>
+      <FormRow label='Overpayment Jun Vest'>
         <Input
           type='number'
-          id='vest-jun-night'
-          defaultValue={settings?.vest_jun_night}
+          id='overpayment-jun-vest'
+          defaultValue={currentWage?.overpayment_jun_vest}
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'vest_jun_night')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Vest Senior €/hour'>
-        <Input
-          type='number'
-          id='vest-sen'
-          defaultValue={settings?.vest_sen}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'vest_sen')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Vest Senior Night €/hour'>
-        <Input
-          type='number'
-          id='vest-sen-night'
-          defaultValue={settings?.vest_sen_night}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'vest_sen_night')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Suit Junior €/hour'>
-        <Input
-          type='number'
-          id='suit-jun'
-          defaultValue={settings?.suit_jun}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'suit_jun')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Suit Junior Night €/hour'>
-        <Input
-          type='number'
-          id='suit-jun-night'
-          defaultValue={settings?.suit_jun_night}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'suit_jun_night')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Suit Senior €/hour'>
-        <Input
-          type='number'
-          id='suit-sen'
-          defaultValue={settings?.suit_sen}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'suit_sen')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Suit Senior Night €/hour'>
-        <Input
-          type='number'
-          id='suit-sen-night'
-          defaultValue={settings?.suit_sen_night}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'suit_sen_night')
+            handleUpdateWage(e, 'overpayment_jun_vest')
           }
         />
       </FormRow>
 
       {/* //////////////////////////////////// */}
-      <FormRow label='Vest Junior Holiday €/hour'>
-        <Input
-          type='number'
-          id='vest-jun-holiday'
-          defaultValue={settings?.vest_jun_holiday}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'vest_jun_holiday')
-          }
-        />
-      </FormRow>
 
-      <FormRow label='Vest Junior Night Holiday €/hour'>
-        <Input
-          type='number'
-          id='vest-jun-night-holiday'
-          defaultValue={settings?.vest_jun_night_holiday}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'vest_jun_night_holiday')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Vest Senior Holiday €/hour'>
-        <Input
-          type='number'
-          id='vest-sen-holiday'
-          defaultValue={settings?.vest_sen_holiday}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'vest_sen_holiday')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Vest Senior Night Holiday €/hour'>
-        <Input
-          type='number'
-          id='vest-sen-night-holiday'
-          defaultValue={settings?.vest_sen_night_holiday}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'vest_sen_night_holiday')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Suit Junior Holiday €/hour'>
-        <Input
-          type='number'
-          id='suit-jun-holiday'
-          defaultValue={settings?.suit_jun_holiday}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'suit_jun_holiday')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Suit Junior Night Holiday €/hour'>
-        <Input
-          type='number'
-          id='suit-jun-night-holiday'
-          defaultValue={settings?.suit_jun_night_holiday}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'suit_jun_night_holiday')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Suit Senior Holiday €/hour'>
-        <Input
-          type='number'
-          id='suit-sen-holiday'
-          defaultValue={settings?.suit_sen_holiday}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'suit_sen_holiday')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Suit Senior Night Holiday €/hour'>
-        <Input
-          type='number'
-          id='suit-sen-night'
-          defaultValue={settings?.suit_sen_night_holiday}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'suit_sen_night_holiday')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Night Holiday Surcharge €/hour (all roles)'>
-        <Input
-          type='number'
-          id='night-holiday-surcharge'
-          defaultValue={settings?.night_holiday_surcharge}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'night_holiday_surcharge')
-          }
-        />
-      </FormRow>
-      {/* //////////////////////////////////// */}
-
-      <FormRow label='Night Allowance'>
+      {/* <FormRow label='Night Allowance'>
         <Input
           type='number'
           id='night-allowance'
           defaultValue={settings?.night_allowance}
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'night_allowance')
+            handleUpdateSetting(e, 'night_allowance')
           }
         />
       </FormRow>
@@ -312,10 +245,10 @@ const UpdateSettingsForm = () => {
           defaultValue={settings?.holiday_compensation}
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'holiday_compensation')
+            handleUpdateSetting(e, 'holiday_compensation')
           }
         />
-      </FormRow>
+      </FormRow> */}
 
       <FormRow label='Beginning Night Hours'>
         <Input
@@ -324,7 +257,7 @@ const UpdateSettingsForm = () => {
           defaultValue={settings?.beginning_night_hours}
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'beginning_night_hours')
+            handleUpdateSetting(e, 'beginning_night_hours')
           }
         />
       </FormRow>
@@ -336,19 +269,7 @@ const UpdateSettingsForm = () => {
           defaultValue={settings?.ending_night_hours}
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'ending_night_hours')
-          }
-        />
-      </FormRow>
-
-      <FormRow label='Insignificance Limit'>
-        <Input
-          type='number'
-          id='insignificance_limit'
-          defaultValue={settings?.insignificance_limit}
-          disabled={isUpdating}
-          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdate(e, 'insignificance_limit')
+            handleUpdateSetting(e, 'ending_night_hours')
           }
         />
       </FormRow>
@@ -373,7 +294,7 @@ const UpdateSettingsForm = () => {
             disabled={isUpdating}
             ref={fileInputRef}
             onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-              handleUpdate(e, 'holidays')
+              handleUpdateSetting(e, 'holidays')
             }
           />
           <>

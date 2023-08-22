@@ -39,6 +39,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // used 0,43 for both roles and dresscode on night holiday surcharge
 // dashboard stats
 
+// Settings
+// if change year + update -> doesn't revalidate data
+// make a ref instead of controlled element for year input (performance)
+
 // typescript
 // useElementRef: https://www.youtube.com/watch?v=JuULWGuoI1A
 
