@@ -224,7 +224,7 @@ export interface Database {
           overpayment_sen_vest_holiday: number
           overpayment_sen_vest_night: number
           overpayment_sen_vest_night_holiday: number
-          user_id?: string
+          user_id: string
           year: string
         }
         Update: {
@@ -254,7 +254,14 @@ export interface Database {
           user_id?: string
           year?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "wage_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {

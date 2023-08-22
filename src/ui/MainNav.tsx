@@ -7,7 +7,8 @@ import {
   HiCalendarDays,
 } from 'react-icons/hi2';
 import { LuEuro } from 'react-icons/lu';
-import { useSettings } from '../features/settings/useSettings';
+import { useWage } from '../features/settings/useWage';
+import { useYear } from '../context/YearContext';
 
 type StyledNavLinkProps = {
   hasdot?: string;
@@ -73,8 +74,11 @@ const StyledNavLink = styled(NavLink)<StyledNavLinkProps>`
 `;
 
 const MainNav = () => {
-  const { settings } = useSettings();
-  const holidaysData = settings?.holidays as {
+  const { year } = useYear();
+  const { wage } = useWage(year);
+  const currentWage = wage?.find((wage) => wage.year === year);
+
+  const holidaysData = currentWage?.holidays as {
     fileName: string;
     dates: string[];
   };

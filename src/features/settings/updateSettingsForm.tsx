@@ -19,6 +19,7 @@ import Button from '../../ui/Button';
 import { useAddWage } from './useAddWage';
 import { defaultWage } from '../../data/data-defaultValues';
 import { toast } from 'react-hot-toast';
+import { useYear } from '../../context/YearContext';
 
 const Error = styled.span`
   font-size: 1.4rem;
@@ -39,6 +40,9 @@ const UpdateSettingsForm = () => {
     { value: string; label: string }[] | null
   >(null);
   const [yearError, setYearError] = useState('');
+
+  // context
+  const { setYear } = useYear();
 
   const { isLoading: isLoading1, settings } = useSettings();
   const { isUpdating: isUpdatingSettings, updateSetting } = useUpdateSetting();
@@ -64,6 +68,9 @@ const UpdateSettingsForm = () => {
         label: year,
       }));
 
+      // Sort the years in descending order
+      mappedOptions.sort((a, b) => b.value.localeCompare(a.value));
+
       // Check if selectOptYear is different before updating it
       if (
         !selectOptYear ||
@@ -77,7 +84,13 @@ const UpdateSettingsForm = () => {
   if (isLoading1 || isLoading2) return <Spinner />;
 
   // typescrpt helper
-  const holidaysData = settings?.holidays as {
+  // const holidaysData = settings?.holidays as {
+  //   fileName: string;
+  //   dates: string[];
+  // };
+
+  // typescrpt helper
+  const holidaysData = currentWage?.holidays as {
     fileName: string;
     dates: string[];
   };
@@ -150,7 +163,17 @@ const UpdateSettingsForm = () => {
     )
       return;
 
-    updateWage({ [field]: value });
+    if (field === 'holidays') {
+      if (e.target instanceof HTMLInputElement) {
+        const selectedFile = e.target.files?.[0];
+        if (selectedFile) {
+          const dates = await extractDataFromCsv(selectedFile);
+          updateWage({ [field]: dates });
+        }
+      }
+    } else {
+      updateWage({ [field]: value });
+    }
   }
 
   const selectOptRole = [
@@ -195,8 +218,8 @@ const UpdateSettingsForm = () => {
           disabled={isUpdating}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
             setSelectedYear(e.target.value);
+            setYear(e.target.value);
           }}
-          // onChange={handleChangeYear}
         />
       </FormRow>
 
@@ -294,7 +317,7 @@ const UpdateSettingsForm = () => {
             disabled={isUpdating}
             ref={fileInputRef}
             onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-              handleUpdateSetting(e, 'holidays')
+              handleUpdateWage(e, 'holidays')
             }
           />
           <>
