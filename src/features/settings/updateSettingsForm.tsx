@@ -81,7 +81,8 @@ const UpdateSettingsForm = () => {
   const { isUpdating: isUpdatingWage, updateWage } =
     useUpdateWage(selectedYear);
 
-  const { isLoading: isLoading2, wage } = useWage(selectedYear);
+  // const { isLoading: isLoading2, wage } = useWage(selectedYear);
+  const { isLoading: isLoading2, wage, refetch: refetchWage } = useWage();
   const { addWage, isAdding } = useAddWage();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -139,18 +140,20 @@ const UpdateSettingsForm = () => {
     )
       return;
 
+    updateSetting({ [field]: value });
+
     // If the field is 'holidays', parse the CSV data to extract dates before updating
-    if (field === 'holidays') {
-      if (e.target instanceof HTMLInputElement) {
-        const selectedFile = e.target.files?.[0];
-        if (selectedFile) {
-          const dates = await extractDataFromCsv(selectedFile);
-          updateSetting({ [field]: dates });
-        }
-      }
-    } else {
-      updateSetting({ [field]: value });
-    }
+    // if (field === 'holidays') {
+    //   if (e.target instanceof HTMLInputElement) {
+    //     const selectedFile = e.target.files?.[0];
+    //     if (selectedFile) {
+    //       const dates = await extractDataFromCsv(selectedFile);
+    //       updateSetting({ [field]: dates });
+    //     }
+    //   }
+    // } else {
+    //   updateSetting({ [field]: value });
+    // }
   }
 
   const handleAddYear = () => {
@@ -240,7 +243,8 @@ const UpdateSettingsForm = () => {
           key={selectedYear}
           id='year'
           options={selectOptYear || []}
-          defaultValue={selectedYear}
+          // defaultValue={selectedYear}
+          defaultValue={currentWage?.year}
           disabled={isUpdating}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
             setSelectedYear(e.target.value);
@@ -493,10 +497,10 @@ const UpdateSettingsForm = () => {
         <Input
           type='time'
           id='beginning-night-hours'
-          defaultValue={settings?.beginning_night_hours}
+          defaultValue={currentWage?.beginning_night_hours}
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdateSetting(e, 'beginning_night_hours')
+            handleUpdateWage(e, 'beginning_night_hours')
           }
         />
       </FormRow>
@@ -505,10 +509,10 @@ const UpdateSettingsForm = () => {
         <Input
           type='time'
           id='ending-night-hours'
-          defaultValue={settings?.ending_night_hours}
+          defaultValue={currentWage?.ending_night_hours}
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdateSetting(e, 'ending_night_hours')
+            handleUpdateWage(e, 'ending_night_hours')
           }
         />
       </FormRow>

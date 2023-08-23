@@ -84,98 +84,31 @@ export interface Database {
       }
       settings: {
         Row: {
-          beginning_night_hours: string
           created_at: string | null
-          ending_night_hours: string
-          holiday_compensation: number
-          holidays: Json
           id: number
-          insignificance_limit: number
-          night_allowance: number
-          night_holiday_surcharge: number
           role: string
-          suit_jun: number
-          suit_jun_holiday: number
-          suit_jun_night: number
-          suit_jun_night_holiday: number
-          suit_sen: number
-          suit_sen_holiday: number
-          suit_sen_night: number
-          suit_sen_night_holiday: number
           user_id: string
-          vest_jun: number
-          vest_jun_holiday: number
-          vest_jun_night: number
-          vest_jun_night_holiday: number
-          vest_sen: number
-          vest_sen_holiday: number
-          vest_sen_night: number
-          vest_sen_night_holiday: number
         }
         Insert: {
-          beginning_night_hours: string
           created_at?: string | null
-          ending_night_hours: string
-          holiday_compensation: number
-          holidays: Json
           id?: number
-          insignificance_limit?: number
-          night_allowance: number
-          night_holiday_surcharge: number
-          role: string
-          suit_jun: number
-          suit_jun_holiday: number
-          suit_jun_night: number
-          suit_jun_night_holiday: number
-          suit_sen: number
-          suit_sen_holiday: number
-          suit_sen_night: number
-          suit_sen_night_holiday: number
+          role?: string
           user_id?: string
-          vest_jun: number
-          vest_jun_holiday: number
-          vest_jun_night: number
-          vest_jun_night_holiday: number
-          vest_sen: number
-          vest_sen_holiday: number
-          vest_sen_night: number
-          vest_sen_night_holiday: number
         }
         Update: {
-          beginning_night_hours?: string
           created_at?: string | null
-          ending_night_hours?: string
-          holiday_compensation?: number
-          holidays?: Json
           id?: number
-          insignificance_limit?: number
-          night_allowance?: number
-          night_holiday_surcharge?: number
           role?: string
-          suit_jun?: number
-          suit_jun_holiday?: number
-          suit_jun_night?: number
-          suit_jun_night_holiday?: number
-          suit_sen?: number
-          suit_sen_holiday?: number
-          suit_sen_night?: number
-          suit_sen_night_holiday?: number
           user_id?: string
-          vest_jun?: number
-          vest_jun_holiday?: number
-          vest_jun_night?: number
-          vest_jun_night_holiday?: number
-          vest_sen?: number
-          vest_sen_holiday?: number
-          vest_sen_night?: number
-          vest_sen_night_holiday?: number
         }
         Relationships: []
       }
       wage: {
         Row: {
           base_wage: number
+          beginning_night_hours: string
           created_at: string
+          ending_night_hours: string
           holiday_compensation_rate: number
           holidays: Json
           id: number
@@ -202,7 +135,9 @@ export interface Database {
         }
         Insert: {
           base_wage: number
+          beginning_night_hours: string
           created_at?: string
+          ending_night_hours: string
           holiday_compensation_rate: number
           holidays: Json
           id?: number
@@ -229,7 +164,9 @@ export interface Database {
         }
         Update: {
           base_wage?: number
+          beginning_night_hours?: string
           created_at?: string
+          ending_night_hours?: string
           holiday_compensation_rate?: number
           holidays?: Json
           id?: number
