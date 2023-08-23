@@ -7,8 +7,8 @@ import Textarea from '../../ui/Textarea';
 import FormRow from '../../ui/FormRow';
 import Select from '../../ui/Select';
 
-import { Job } from '../../types';
-import { JobType } from '../../types/collection';
+import { HolidayData, Job } from '../../types';
+import { JobType, WageType } from '../../types/collection';
 import { useAddJob } from './useAddJob';
 import { useEditJob } from './useEditJob';
 import { calculateHours, capitalizeFirstLetter } from '../../utils/helpers';
@@ -19,6 +19,7 @@ import { useState } from 'react';
 import { useUser } from '../authentication/useUser';
 import { useJobs } from './useJobs';
 import { toast } from 'react-hot-toast';
+import { useWages } from '../settings/useWages';
 
 const Box = styled.div`
   background-color: var(--color-grey-50);
@@ -47,15 +48,10 @@ const CreateJobForm = ({
   const { isAdding, addJob } = useAddJob();
   const { isEditing, editJob } = useEditJob();
   const { settings } = useSettings();
+  const { wages } = useWages();
   const { user } = useUser();
   const isWorking = isAdding || isEditing;
   const { id: editId, ...editValues } = (jobToEdit as JobType) ?? {};
-
-  // helper for typescript
-  const holidaysData = settings?.holidays as {
-    fileName: string;
-    dates: string[];
-  };
 
   // check if form is used for editing or adding
   const isEditSession = Boolean(editId);
@@ -72,26 +68,47 @@ const CreateJobForm = ({
   } = useForm<Job>({
     defaultValues: isEditSession || isCalendar ? editValues : {},
   });
+  console.log(wages);
 
   const onSubmit = (data: Job) => {
-    // check if day matches witch holidays
-    const isHoliday = holidaysData?.dates.includes(data.date);
+    // check if day matches with day of holidays array
+    const isHoliday = wages?.some((wage: WageType) => {
+      const holidaysData = wage.holidays as HolidayData;
+      return data.date ? holidaysData?.dates.includes(data.date) : false;
+    });
+
+    // UI doesn't allow date = null anyway
+    const year = data.date ? data.date.slice(0, 4) : '';
+
+    // check if settings already exists and holidays array is provided for this year
+    if (
+      !wages?.some((wage) => wage.year === year) ||
+      wages?.some((wage: WageType) => {
+        const holidaysData = wage.holidays as HolidayData;
+        return wage.year === year && holidaysData.dates.length === 0;
+      })
+    )
+      return toast.error(`First add or complete Settings for ${year}`);
+
+    const currentWage = wages?.find((wage) => wage.year === year);
+    if (!currentWage) throw new Error('current wage not available');
+
+    // check if job to edit was already on this date
+    const isOldJob = jobToEdit?.date === data.date;
+
+    // check if job already exists on this day if it is not the same job as the one which gets edited
+    const jobAlreadyExists = jobs?.find((job) => job.date === data.date);
+    if (jobAlreadyExists && !isOldJob)
+      return toast.error('Job already exists on this date');
 
     if (isEditSession) {
-      if (!settings) throw new Error('settings not available');
-
-      // prevent to set more than one job on same date
-      const jobWithSameDate = jobs?.find((job) => job.date === data.date);
-      if (jobWithSameDate)
-        return toast.error('Job already exists on this date');
-
       // calculate total hours and night hours
       const { check_in, check_out } = data;
       const { totalHours, nightHours } = calculateHours(
         check_in,
         check_out,
-        settings?.beginning_night_hours,
-        settings?.ending_night_hours
+        currentWage?.beginning_night_hours,
+        currentWage?.ending_night_hours
       );
 
       editJob(
@@ -103,11 +120,11 @@ const CreateJobForm = ({
             total_hours: totalHours,
             night_hours: nightHours,
             role: changeJobRole
-              ? settings.role
+              ? settings?.role ?? ''
               : jobToEdit && 'role' in jobToEdit
               ? jobToEdit.role
               : '',
-            is_holiday: isHoliday,
+            is_holiday: isHoliday ?? false,
           },
           id: editId,
         },
@@ -119,21 +136,14 @@ const CreateJobForm = ({
         }
       );
     } else {
-      if (!settings) throw new Error('settings not available');
       if (!user) throw new Error('user not available');
-
-      // prevent to set more than one job on same date
-      const jobWithSameDate = jobs?.find((job) => job.date === data.date);
-      if (jobWithSameDate)
-        return toast.error('Job already exists on this date');
-
       // calculate total hours and night hours
       const { check_in, check_out } = data;
       const { totalHours, nightHours } = calculateHours(
         check_in,
         check_out,
-        settings?.beginning_night_hours,
-        settings?.ending_night_hours
+        currentWage?.beginning_night_hours,
+        currentWage?.ending_night_hours
       );
       const dresscode = data?.dresscode.toLowerCase();
 
@@ -145,8 +155,8 @@ const CreateJobForm = ({
           dresscode,
           total_hours: totalHours,
           night_hours: nightHours,
-          role: settings.role,
-          is_holiday: isHoliday,
+          role: settings?.role ?? 'jun',
+          is_holiday: isHoliday ?? false,
           user_id: user.id,
         },
         {

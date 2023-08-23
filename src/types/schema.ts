@@ -39,7 +39,7 @@ export interface Database {
           check_in: string
           check_out: string
           created_at: string
-          date: string
+          date: string | null
           dresscode: string
           id: number
           is_holiday: boolean
@@ -54,7 +54,7 @@ export interface Database {
           check_in: string
           check_out: string
           created_at?: string
-          date: string
+          date?: string | null
           dresscode: string
           id?: number
           is_holiday?: boolean
@@ -69,7 +69,7 @@ export interface Database {
           check_in?: string
           check_out?: string
           created_at?: string
-          date?: string
+          date?: string | null
           dresscode?: string
           id?: number
           is_holiday?: boolean
