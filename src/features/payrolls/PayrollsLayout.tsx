@@ -2,7 +2,6 @@ import { styled } from 'styled-components';
 import Spinner from '../../ui/Spinner';
 import {
   calculateSalary,
-  capitalize,
   capitalizeFirstLetter,
   combinations,
   getHoursByDresscodeAndRole,
@@ -13,7 +12,6 @@ import {
 } from '../../utils/helpers';
 import { useJobs } from '../jobs/useJobs';
 import Payroll from './Payroll';
-import { useSettings } from '../settings/useSettings';
 import { Combination, SalaryOptions } from '../../types';
 import Empty from '../../ui/Empty';
 import { useWage } from '../settings/useWage';
@@ -31,20 +29,16 @@ const StyledPayrollsLayout = styled.div`
 
 const PayrollsLayout = () => {
   const { jobs, isLoading } = useJobs();
-  const { settings } = useSettings();
   const { wage } = useWage();
   const groupedJobs = jobs ? groupDataByMonth(jobs) : {};
-
-  const dresscodes = ['vest', 'suit'];
-  const roles = ['jun', 'sen'];
 
   if (isLoading) return <Spinner />;
   if (!jobs?.length) return <Empty resourceName='payrolls' />;
 
   return (
     <StyledPayrollsLayout>
-      {/* Render a table for each month */}
       {Object.keys(groupedJobs).map((key) => {
+        // Render a table for each month
         const monthData = groupedJobs[key];
         const date = new Date(monthData?.[0]?.date || Date.now()); // Get the date for the first row of the month
         const monthName = date.toLocaleString('default', { month: 'long' });
@@ -59,149 +53,7 @@ const PayrollsLayout = () => {
           }, 0)
           .toFixed(2);
 
-        // const totalHoursVestJun = monthData
-        //   ? getHoursByDresscodeAndRole(monthData, 'vest', 'jun', 'total_hours')
-        //   : 0;
-
-        // const totalHoursVestJunHoliday = monthData
-        //   ? getHoursByDresscodeAndRole(
-        //       monthData,
-        //       'vest',
-        //       'jun',
-        //       'total_hours',
-        //       true
-        //     )
-        //   : 0;
-
-        // const totalHoursVestSen = monthData
-        //   ? getHoursByDresscodeAndRole(monthData, 'vest', 'sen', 'total_hours')
-        //   : 0;
-
-        // const totalHoursVestSenHoliday = monthData
-        //   ? getHoursByDresscodeAndRole(
-        //       monthData,
-        //       'vest',
-        //       'sen',
-        //       'total_hours',
-        //       true
-        //     )
-        //   : 0;
-
-        // const totalHoursSuitJun = monthData
-        //   ? getHoursByDresscodeAndRole(monthData, 'suit', 'jun', 'total_hours')
-        //   : 0;
-
-        // const totalHoursSuitJunHoliday = monthData
-        //   ? getHoursByDresscodeAndRole(
-        //       monthData,
-        //       'suit',
-        //       'jun',
-        //       'total_hours',
-        //       true
-        //     )
-        //   : 0;
-
-        // const totalHoursSuitSen = monthData
-        //   ? getHoursByDresscodeAndRole(monthData, 'suit', 'sen', 'total_hours')
-        //   : 0;
-
-        // const totalHoursSuitSenHoliday = monthData
-        //   ? getHoursByDresscodeAndRole(
-        //       monthData,
-        //       'suit',
-        //       'sen',
-        //       'total_hours',
-        //       true
-        //     )
-        //   : 0;
-
-        // const totalNightHoursVestJun = monthData
-        //   ? getHoursByDresscodeAndRole(monthData, 'vest', 'jun', 'night_hours')
-        //   : 0;
-
-        // const totalNightHoursVestJunHoliday = monthData
-        //   ? getHoursByDresscodeAndRole(
-        //       monthData,
-        //       'vest',
-        //       'jun',
-        //       'night_hours',
-        //       true
-        //     )
-        //   : 0;
-
-        // const totalNightHoursVestSen = monthData
-        //   ? getHoursByDresscodeAndRole(monthData, 'vest', 'sen', 'night_hours')
-        //   : 0;
-
-        // const totalNightHoursVestSenHoliday = monthData
-        //   ? getHoursByDresscodeAndRole(
-        //       monthData,
-        //       'vest',
-        //       'sen',
-        //       'night_hours',
-        //       true
-        //     )
-        //   : 0;
-
-        // const totalNightHoursSuitJun = monthData
-        //   ? getHoursByDresscodeAndRole(monthData, 'suit', 'jun', 'night_hours')
-        //   : 0;
-
-        // const totalNightHoursSuitJunHoliday = monthData
-        //   ? getHoursByDresscodeAndRole(
-        //       monthData,
-        //       'suit',
-        //       'jun',
-        //       'night_hours',
-        //       true
-        //     )
-        //   : 0;
-
-        // const totalNightHoursSuitSen = monthData
-        //   ? getHoursByDresscodeAndRole(monthData, 'suit', 'sen', 'night_hours')
-        //   : 0;
-
-        // const totalNightHoursSuitSenHoliday = monthData
-        //   ? getHoursByDresscodeAndRole(
-        //       monthData,
-        //       'suit',
-        //       'sen',
-        //       'night_hours',
-        //       true
-        //     )
-        //   : 0;
-
-        // const salaryOptions = {
-        //   totalHoursVestJun: Number(totalHoursVestJun),
-        //   totalHoursVestJunHoliday: Number(totalHoursVestJunHoliday),
-
-        //   totalHoursVestSen: Number(totalHoursVestSen),
-        //   totalHoursVestSenHoliday: Number(totalHoursVestSenHoliday),
-
-        //   totalHoursSuitJun: Number(totalHoursSuitJun),
-        //   totalHoursSuitJunHoliday: Number(totalHoursSuitJunHoliday),
-
-        //   totalHoursSuitSen: Number(totalHoursSuitSen),
-        //   totalHoursSuitSenHoliday: Number(totalHoursSuitSenHoliday),
-
-        //   totalNightHoursVestJun: Number(totalNightHoursVestJun),
-        //   totalNightHoursVestJunHoliday: Number(totalNightHoursVestJunHoliday),
-
-        //   totalNightHoursVestSen: Number(totalNightHoursVestSen),
-        //   totalNightHoursVestSenHoliday: Number(totalNightHoursVestSenHoliday),
-
-        //   totalNightHoursSuitJun: Number(totalNightHoursSuitJun),
-        //   totalNightHoursSuitJunHoliday: Number(totalNightHoursSuitJunHoliday),
-
-        //   totalNightHoursSuitSen: Number(totalNightHoursSuitSen),
-        //   totalNightHoursSuitSenHoliday: Number(totalNightHoursSuitSenHoliday),
-        // };
-
-        // const salary = settings
-        //   ? calculateSalary(salaryOptions, settings)
-        //   : 999;
-
-        // //////////////////////////////////////
+        //
 
         const calculateSalaryOptions = (
           combinations: Combination[]
@@ -258,16 +110,10 @@ const PayrollsLayout = () => {
 
         const salaryOptions = calculateSalaryOptions(combinations);
 
-        // const salary = settings
-        //   ? calculateSalary(salaryOptions, settings)
-        //   : 999;
-
+        if (!currentWage) throw new Error('No wage found!');
         const salary = calculateSalary(salaryOptions, currentWage);
 
-        console.log(salary);
-
         // //////////////////////////////////////////////////
-
         return (
           <Payroll
             key={key}
@@ -276,6 +122,7 @@ const PayrollsLayout = () => {
             numJobs={numberJobs}
             hours={Number(totalHours)}
             salary={salary}
+            insignificanceLimit={currentWage.insignificance_limit}
           />
         );
       })}

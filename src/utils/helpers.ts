@@ -10,7 +10,7 @@ import {
   endOfMonth,
 } from 'date-fns';
 import Papa from 'papaparse';
-import { SettingsType } from '../types/collection';
+import { WageType } from '../types/collection';
 import { Combination, HolidayData } from '../types';
 
 export const legendColors = [
@@ -246,14 +246,6 @@ export const removeTrailingZeros = (num: number): string => {
 };
 
 type SalaryOptions = {
-  // totalHoursVestJun: number;
-  // totalHoursVestSen: number;
-  // totalHoursSuitJun: number;
-  // totalHoursSuitSen: number;
-  // totalNightHoursVestJun: number;
-  // totalNightHoursVestSen: number;
-  // totalNightHoursSuitJun: number;
-  // totalNightHoursSuitSen: number;
   totalHoursVestJun: number;
   totalHoursVestJunHoliday: number;
 
@@ -281,7 +273,7 @@ type SalaryOptions = {
 
 export const calculateSalary = (
   salaryOptions: SalaryOptions,
-  settings: SettingsType
+  currentWage: WageType
 ) => {
   const {
     totalHoursVestJun,
@@ -310,17 +302,50 @@ export const calculateSalary = (
   } = salaryOptions;
 
   const {
-    vest_jun: hourlyWageDayVestJun,
-    vest_jun_night: hourlyWageNightVestJun,
-    vest_sen: hourlyWageDayVestSen,
-    vest_sen_night: hourlyWageNightVestSen,
-    suit_jun: hourlyWageDaySuitJun,
-    suit_jun_night: hourlyWageNightSuitJun,
-    suit_sen: hourlyWageDaySuitSen,
-    suit_sen_night: hourlyWageNightSuitSen,
-    night_allowance: nightAllowance,
+    base_wage: baseWage,
     holiday_compensation: holidayCompansation,
-  } = settings;
+    night_allowance_rate: nightAllowanceRate,
+    overpayment_jun_vest: overpaymentJunVest,
+    overpayment_jun_vest_night: overpaymentJunVestNight,
+    overpayment_jun_vest_holiday: overpaymentJunVestHoliday,
+    overpayment_jun_vest_night_holiday: overpaymentJunVestNightHoliday,
+    overpayment_jun_suit: overpaymentJunSuit,
+    overpayment_jun_suit_night: overpaymentJunSuitNight,
+    overpayment_jun_suit_holiday: overpaymentJunSuitHoliday,
+    overpayment_jun_suit_night_holiday: overpaymentJunSuitNightHoliday,
+    overpayment_sen_vest: overpaymentSenVest,
+    overpayment_sen_vest_night: overpaymentSenVestNight,
+    overpayment_sen_vest_holiday: overpaymentSenVestHoliday,
+    overpayment_sen_vest_night_holiday: overpaymentSenVestNightHoliday,
+    overpayment_sen_suit: overpaymentSenSuit,
+    overpayment_sen_suit_night: overpaymentSenSuitNight,
+    overpayment_sen_suit_holiday: overpaymentSenSuitHoliday,
+    overpayment_sen_suit_night_holiday: overpaymentSenSuitNightHoliday,
+  } = currentWage;
+
+  const hourlyRateVestJun = baseWage + overpaymentJunVest;
+  const hourlyRateVestJunNight = baseWage + overpaymentJunVestNight;
+  const hourlyRateVestJunHoliday = baseWage + overpaymentJunVestHoliday;
+  const hourlyRateVestJunNightHoliday =
+    baseWage + overpaymentJunVestNightHoliday;
+
+  const hourlyRateVestSen = baseWage + overpaymentSenVest;
+  const hourlyRateVestSenNight = baseWage + overpaymentSenVestNight;
+  const hourlyRateVestSenHoliday = baseWage + overpaymentSenVestHoliday;
+  const hourlyRateVestSenNightHoliday =
+    baseWage + overpaymentSenVestNightHoliday;
+
+  const hourlyRateSuitJun = baseWage + overpaymentJunSuit;
+  const hourlyRateSuitJunNight = baseWage + overpaymentJunSuitNight;
+  const hourlyRateSuitJunHoliday = baseWage + overpaymentJunSuitHoliday;
+  const hourlyRateSuitJunNightHoliday =
+    baseWage + overpaymentJunSuitNightHoliday;
+
+  const hourlyRateSuitSen = baseWage + overpaymentSenSuit;
+  const hourlyRateSuitSenNight = baseWage + overpaymentSenSuitNight;
+  const hourlyRateSuitSenHoliday = baseWage + overpaymentSenSuitHoliday;
+  const hourlyRateSuitSenNightHoliday =
+    baseWage + overpaymentSenSuitNightHoliday;
 
   // calculation day hours ////////////////////////////////////////
   const dayHoursVestJun = totalHoursVestJun - totalNightHoursVestJun;
@@ -340,14 +365,6 @@ export const calculateSalary = (
     totalHoursSuitSenHoliday - totalNightHoursSuitSenHoliday;
 
   // calculation total hours ////////////////////////////////////////
-  const totalHoursJun = totalHoursVestJun + totalHoursSuitJun;
-  const totalHoursJunHoliday =
-    totalHoursVestJunHoliday + totalHoursSuitJunHoliday;
-
-  const totalHoursSen = totalHoursVestSen + totalHoursSuitSen;
-  const totalHoursSenHoliday =
-    totalHoursVestSenHoliday + totalHoursSuitSenHoliday;
-
   const totalHoursNightJun = totalNightHoursVestJun + totalNightHoursSuitJun;
   const totalHoursNightJunHoliday =
     totalNightHoursVestJunHoliday + totalNightHoursSuitJunHoliday;
@@ -356,75 +373,132 @@ export const calculateSalary = (
   const totalHoursNightSenHoliday =
     totalNightHoursVestSenHoliday + totalNightHoursSuitSenHoliday;
 
-  // const totalHours = totalHoursJun + totalHoursSen;
-  // const totalHoursNight = totalHoursNightJun + totalHoursNightSen
-  const totalHours =
-    totalHoursJun + totalHoursSen + totalHoursJunHoliday + totalHoursSenHoliday;
   const totalHoursNight =
     totalHoursNightJun +
     totalHoursNightSen +
     totalHoursNightJunHoliday +
     totalHoursNightSenHoliday;
 
-  // calculate parts of salary
-  const amountVestDayJun = dayHoursVestJun * hourlyWageDayVestJun;
-  const amountVestDaySen = dayHoursVestSen * hourlyWageDayVestSen;
-  const amountVestNightJun = totalNightHoursVestJun * hourlyWageNightVestJun;
-  const amountVestNightSen = totalNightHoursVestSen * hourlyWageNightVestSen;
-  const amountSuitDayJun = dayHoursSuitJun * hourlyWageDaySuitJun;
-  const amountSuitDaySen = dayHoursSuitSen * hourlyWageDaySuitSen;
-  const amountSuitNightJun = totalNightHoursSuitJun * hourlyWageNightSuitJun;
-  const amountSuitNightSen = totalNightHoursSuitSen * hourlyWageNightSuitSen;
+  // calculate parts of salary ////////////////////////////////////////
+  const amountVestDayJun = dayHoursVestJun * hourlyRateVestJun;
+  const amountVestDaySen = dayHoursVestSen * hourlyRateVestSen;
+  const amountVestNightJun = totalNightHoursVestJun * hourlyRateVestJunNight;
+  const amountVestNightSen = totalNightHoursVestSen * hourlyRateVestSenNight;
+  const amountSuitDayJun = dayHoursSuitJun * hourlyRateSuitJun;
+  const amountSuitDaySen = dayHoursSuitSen * hourlyRateSuitSen;
+  const amountSuitNightJun = totalNightHoursSuitJun * hourlyRateSuitJunNight;
+  const amountSuitNightSen = totalNightHoursSuitSen * hourlyRateSuitSenNight;
 
-  const amountNightAllowance = totalHoursNight * nightAllowance;
-  const amountHolidayCompensation = totalHours * holidayCompansation;
+  const amountNightAllowance = totalHoursNight * nightAllowanceRate;
+
+  // holiday compensation ///////////////////////////////////////////////
+  const holidayCompansationRate = holidayCompansation / 100;
+
+  // 1) day
+  const holidayCompensationRateVestJun =
+    hourlyRateVestJun * holidayCompansationRate;
+  const holidayCompensationRateVestSen =
+    hourlyRateVestSen * holidayCompansationRate;
+  const holidayCompensationRateSuitJun =
+    hourlyRateSuitJun * holidayCompansationRate;
+  const holidayCompensationRateSuitSen =
+    hourlyRateSuitSen * holidayCompansationRate;
+
+  // 2) night
+  const holidayCompensationRateVestJunNight =
+    hourlyRateVestJunNight * holidayCompansationRate;
+  const holidayCompensationRateVestSenNight =
+    hourlyRateVestSenNight * holidayCompansationRate;
+  const holidayCompensationRateSuitJunNight =
+    hourlyRateSuitJunNight * holidayCompansationRate;
+  const holidayCompensationRateSuitSenNight =
+    hourlyRateSuitSenNight * holidayCompansationRate;
+
+  const amountHolidayCompensation =
+    dayHoursVestJun * holidayCompensationRateVestJun +
+    dayHoursVestSen * holidayCompensationRateVestSen +
+    dayHoursSuitJun * holidayCompensationRateSuitJun +
+    dayHoursSuitSen * holidayCompensationRateSuitSen +
+    totalNightHoursVestJun * holidayCompensationRateVestJunNight +
+    totalNightHoursVestSen * holidayCompensationRateVestSenNight +
+    totalNightHoursSuitJun * holidayCompensationRateSuitJunNight +
+    totalNightHoursSuitSen * holidayCompensationRateSuitSenNight;
 
   //  calculate holiday salaries /////////////////////////////////////////////
-  const hourlyWageDayVestJunHoliday = settings.vest_jun_holiday;
-  const hourlyWageDayVestSenHoliday = settings.vest_sen_holiday;
-  const hourlyWageNightVestJunHoliday = settings.vest_jun_night_holiday;
-  const hourlyWageNightVestSenHoliday = settings.vest_sen_night_holiday;
-  const hourlyWageDaySuitJunHoliday = settings.suit_jun_holiday;
-  const hourlyWageDaySuitSenHoliday = settings.suit_sen_holiday;
-  const hourlyWageNightSuitJunHoliday = settings.suit_jun_night_holiday;
-  const hourlyWageNightSuitSenHoliday = settings.suit_sen_night_holiday;
-
   const amountVestDayJunHoliday =
-    dayHoursVestJunHoliday * hourlyWageDayVestJunHoliday;
-  const amountVestDaySenHoliday =
-    dayHoursVestSenHoliday * hourlyWageDayVestSenHoliday;
+    dayHoursVestJunHoliday * hourlyRateVestJunHoliday;
   const amountVestNightJunHoliday =
-    totalNightHoursVestJunHoliday * hourlyWageNightVestJunHoliday;
+    totalNightHoursVestJunHoliday * hourlyRateVestJunNightHoliday;
+  const amountVestDaySenHoliday =
+    dayHoursVestSenHoliday * hourlyRateVestSenHoliday;
   const amountVestNightSenHoliday =
-    totalNightHoursVestSenHoliday * hourlyWageNightVestSenHoliday;
+    totalNightHoursVestSenHoliday * hourlyRateVestSenNightHoliday;
   const amountSuitDayJunHoliday =
-    dayHoursSuitJunHoliday * hourlyWageDaySuitJunHoliday;
-  const amountSuitDaySenHoliday =
-    dayHoursSuitSenHoliday * hourlyWageDaySuitSenHoliday;
+    dayHoursSuitJunHoliday * hourlyRateSuitJunHoliday;
   const amountSuitNightJunHoliday =
-    totalNightHoursSuitJunHoliday * hourlyWageNightSuitJunHoliday;
+    totalNightHoursSuitJunHoliday * hourlyRateSuitJunNightHoliday;
+  const amountSuitDaySenHoliday =
+    dayHoursSuitSenHoliday * hourlyRateSuitSenHoliday;
   const amountSuitNightSenHoliday =
-    totalNightHoursSuitSenHoliday * hourlyWageNightSuitSenHoliday;
+    totalNightHoursSuitSenHoliday * hourlyRateSuitSenNightHoliday;
 
   // holiday surcharge NOTE (addiere Tag + Nacht zusammen (in zB totalHoursVestJunHoliday bereits enthalten) für Fiertagszuschlag -> siehe Juni 2022 4. Zeile)
   const amountVestJunHolidaySurcharge =
-    totalHoursVestJunHoliday * hourlyWageDayVestJunHoliday +
-    totalNightHoursVestJunHoliday * nightAllowance;
+    totalHoursVestJunHoliday * hourlyRateVestJunHoliday +
+    totalNightHoursVestJunHoliday * nightAllowanceRate;
 
   const amountVestSenHolidaySurcharge =
-    totalHoursVestSenHoliday * hourlyWageDayVestSenHoliday +
-    totalNightHoursVestSenHoliday * nightAllowance;
+    totalHoursVestSenHoliday * hourlyRateVestSenHoliday +
+    totalNightHoursVestSenHoliday * nightAllowanceRate;
 
   const amountSuitJunHolidaySurcharge =
-    totalHoursSuitJunHoliday * hourlyWageDaySuitJunHoliday +
-    totalNightHoursSuitJunHoliday * nightAllowance;
+    totalHoursSuitJunHoliday * hourlyRateSuitJunHoliday +
+    totalNightHoursSuitJunHoliday * nightAllowanceRate;
 
   const amountSuitSenHolidaySurcharge =
-    totalHoursSuitSenHoliday * hourlyWageDaySuitSenHoliday +
-    totalNightHoursSuitSenHoliday * nightAllowance;
+    totalHoursSuitSenHoliday * hourlyRateSuitSenHoliday +
+    totalNightHoursSuitSenHoliday * nightAllowanceRate;
+
+  // holiday compensation holiday ///////////////////////////////////////////////
+
+  // 1) day
+  const holidayCompensationRateVestJunHoliday =
+    hourlyRateVestJunHoliday * holidayCompansationRate;
+  const holidayCompensationRateVestSenHoliday =
+    hourlyRateVestSenHoliday * holidayCompansationRate;
+  const holidayCompensationRateSuitJunHoliday =
+    hourlyRateSuitJunHoliday * holidayCompansationRate;
+  const holidayCompensationRateSuitSenHoliday =
+    hourlyRateSuitSenHoliday * holidayCompansationRate;
+
+  // 2) night
+  const holidayCompensationRateVestJunNightHoliday =
+    hourlyRateVestJunNightHoliday * holidayCompansationRate;
+  const holidayCompensationRateVestSenNightHoliday =
+    hourlyRateVestSenNightHoliday * holidayCompansationRate;
+  const holidayCompensationRateSuitJunNightHoliday =
+    hourlyRateSuitJunNightHoliday * holidayCompansationRate;
+  const holidayCompensationRateSuitSenNightHoliday =
+    hourlyRateSuitSenNightHoliday * holidayCompansationRate;
+
+  //  holiday compensation on holidays - day
+  const amountHolidayCompensationDayHoliday =
+    dayHoursVestJunHoliday * holidayCompensationRateVestJunHoliday +
+    dayHoursVestSenHoliday * holidayCompensationRateVestSenHoliday +
+    dayHoursSuitJunHoliday * holidayCompensationRateSuitJunHoliday +
+    dayHoursSuitSenHoliday * holidayCompensationRateSuitSenHoliday;
+
+  //  holiday compensation on holidays - night
+  const amountHolidayCompensationNightHoliday =
+    totalNightHoursVestJunHoliday * holidayCompensationRateVestJunNightHoliday +
+    totalNightHoursVestSenHoliday * holidayCompensationRateVestSenNightHoliday +
+    totalNightHoursSuitJunHoliday * holidayCompensationRateSuitJunNightHoliday +
+    totalNightHoursSuitSenHoliday * holidayCompensationRateSuitSenNightHoliday;
+
+  const totalamountHolidayCompensationHoliday =
+    amountHolidayCompensationDayHoliday + amountHolidayCompensationNightHoliday;
 
   // calculation total salary //////////////////////////////////////////////
-
   const salary =
     amountVestDayJun +
     amountVestDaySen +
@@ -447,90 +521,11 @@ export const calculateSalary = (
     amountSuitJunHolidaySurcharge +
     amountSuitSenHolidaySurcharge +
     amountNightAllowance +
-    amountHolidayCompensation;
+    amountHolidayCompensation +
+    totalamountHolidayCompensationHoliday;
 
   return salary;
 };
-
-// interface SalaryOptions {
-//   [index: string]: number;
-//   totalHoursVestJun: number;
-//   totalHoursVestSen: number;
-//   totalHoursSuitJun: number;
-//   totalHoursSuitSen: number;
-//   totalNightHoursVestJun: number;
-//   totalNightHoursVestSen: number;
-//   totalNightHoursSuitJun: number;
-//   totalNightHoursSuitSen: number;
-// }
-
-// interface HourlyWage {
-//   day: number;
-//   night: number;
-// }
-
-// export const calculateSalary = (
-//   salaryOptions: SalaryOptions,
-//   settings: SettingsType & { [index: string]: string }
-// ) => {
-//   const {
-//     totalHoursVestJun,
-//     totalHoursVestSen,
-//     totalHoursSuitJun,
-//     totalHoursSuitSen,
-//     totalNightHoursVestJun,
-//     totalNightHoursVestSen,
-//     totalNightHoursSuitJun,
-//     totalNightHoursSuitSen,
-//   } = salaryOptions;
-
-//   const {
-//     night_allowance: nightAllowance,
-//     holiday_compensation: holidayCompansation,
-//   } = settings;
-
-//   const dressCodes = ['vest', 'suit'];
-//   const ageGroups = ['jun', 'sen'];
-
-//   let salary = 0;
-
-//   for (const dressCode of dressCodes) {
-//     for (const ageGroup of ageGroups) {
-//       const totalHours =
-//         salaryOptions[
-//           `totalHours${capitalize(dressCode)}${capitalize(ageGroup)}`
-//         ];
-//       const totalNightHours =
-//         salaryOptions[
-//           `totalNightHours${capitalize(dressCode)}${capitalize(ageGroup)}`
-//         ];
-//       const hourlyWage: HourlyWage = {
-//         day: settings[`${dressCode}_${ageGroup}`],
-//         night: settings[`${dressCode}_${ageGroup}_night`],
-//       };
-
-//       const dayHours = totalHours - totalNightHours;
-//       const amountDay = dayHours * hourlyWage.day;
-//       const amountNight = totalNightHours * hourlyWage.night;
-
-//       salary += amountDay + amountNight;
-//     }
-//   }
-
-//   const totalNightHoursJun = totalNightHoursVestJun + totalNightHoursSuitJun;
-//   const totalNightHoursSen = totalNightHoursVestSen + totalNightHoursSuitSen;
-//   const totalHoursJun = totalHoursVestJun + totalHoursSuitJun;
-//   const totalHoursSen = totalHoursVestSen + totalHoursSuitSen;
-
-//   const amountNightAllowance =
-//     (totalNightHoursJun + totalNightHoursSen) * nightAllowance;
-//   const amountHolidayCompensation =
-//     (totalHoursJun + totalHoursSen) * holidayCompansation;
-
-//   salary += amountNightAllowance + amountHolidayCompensation;
-
-//   return salary;
-// };
 
 // Helper function to capitalize a string
 export const capitalize = (s: string) => {

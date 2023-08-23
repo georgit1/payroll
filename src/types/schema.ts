@@ -109,7 +109,7 @@ export interface Database {
           beginning_night_hours: string
           created_at: string
           ending_night_hours: string
-          holiday_compensation_rate: number
+          holiday_compensation: number
           holidays: Json
           id: number
           insignificance_limit: number
@@ -138,7 +138,7 @@ export interface Database {
           beginning_night_hours: string
           created_at?: string
           ending_night_hours: string
-          holiday_compensation_rate: number
+          holiday_compensation: number
           holidays: Json
           id?: number
           insignificance_limit: number
@@ -167,7 +167,7 @@ export interface Database {
           beginning_night_hours?: string
           created_at?: string
           ending_night_hours?: string
-          holiday_compensation_rate?: number
+          holiday_compensation?: number
           holidays?: Json
           id?: number
           insignificance_limit?: number

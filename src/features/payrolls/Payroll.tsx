@@ -6,7 +6,6 @@ import {
 } from 'react-icons/hi2';
 import PayrollStat from './PayrollStat';
 import ProgressBar from '../../ui/ProgessBar';
-import { useSettings } from '../settings/useSettings';
 import Button from '../../ui/Button';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,6 +41,7 @@ type PayrollProps = {
   numJobs: number;
   hours: number;
   salary: number;
+  insignificanceLimit: number;
   identifier: string;
 };
 
@@ -50,11 +50,11 @@ const Payroll = ({
   numJobs,
   hours,
   salary,
+  insignificanceLimit,
   identifier,
 }: PayrollProps) => {
   const navigate = useNavigate();
-  const { settings } = useSettings();
-  const maxLimit = settings?.insignificance_limit ?? 500;
+  const maxLimit = insignificanceLimit;
 
   return (
     <StyledPayroll>

@@ -457,14 +457,14 @@ const UpdateSettingsForm = () => {
         />
       </FormRow>
 
-      <FormRow label='Holiday Compensation Rate (%)'>
+      <FormRow label='Holiday Compensation (%)'>
         <Input
           type='number'
           id='holiday-compensation-rate'
-          defaultValue={currentWage?.holiday_compensation_rate}
+          defaultValue={currentWage?.holiday_compensation}
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdateWage(e, 'holiday_compensation_rate')
+            handleUpdateWage(e, 'holiday_compensation')
           }
         />
       </FormRow>
