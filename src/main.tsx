@@ -28,6 +28,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // console errors
 // sort css props
 
+// where I use useJobbyDate -> doesnt it need userId??
 // PayrollCalculationTable
 // useMemo in context in compound comp. (Modal.tsx -> https://codesandbox.io/s/compound-react-components-with-hooks-typescript-vpvdq?file=/src/Tabs/Tabs.tsx)
 // prevent scrolling on open menu
@@ -40,8 +41,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // dashboard stats
 
 // Settings
-// if change year + update -> doesn't revalidate data
+// add night-hours + day-hours to wage instead
+// on add new year select should jump to new year (sometimes works)
 // make a ref instead of controlled element for year input (performance)
+// add modal "really want to add year, action can't be undone"
+// showing dot in MainNav on adding new user
 
 // typescript
 // useElementRef: https://www.youtube.com/watch?v=JuULWGuoI1A

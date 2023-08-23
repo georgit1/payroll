@@ -33,7 +33,7 @@ export const defaultSettings: Settings = {
 export const defaultWage: Wage = {
   base_wage: 10.76,
   year: new Date().getFullYear().toString(),
-  holiday_compensation_rate: 9.56,
+  holiday_compensation_rate: 9.58,
   insignificance_limit: 500.91,
   night_allowance_rate: 0.43,
   overpayment_jun_vest: 0.65,

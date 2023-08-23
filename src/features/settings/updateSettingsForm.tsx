@@ -15,7 +15,6 @@ import { HiOutlineInformationCircle } from 'react-icons/hi2';
 import HolidayInfo from './HolidayInfo';
 import { useWage } from './useWage';
 import { useUpdateWage } from './useUpdateWage';
-import Button from '../../ui/Button';
 import { useAddWage } from './useAddWage';
 import { defaultWage } from '../../data/data-defaultValues';
 import { toast } from 'react-hot-toast';
@@ -29,6 +28,39 @@ const Error = styled.span`
 const Info = styled.span`
   font-size: 1.4rem;
   color: var(--color-green-700);
+`;
+
+const AddButton = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: fit-content;
+
+  font-size: 1.4rem;
+  padding: 0.75rem 1.4rem;
+  font-weight: 500;
+
+  border: none;
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-sm);
+
+  color: var(--color-brand-50);
+  background-color: var(--color-brand-600);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-brand-700);
+  }
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  gap: 1rem;
+
+  & input {
+    display: flex;
+    flex-grow: 1;
+  }
 `;
 
 const UpdateSettingsForm = () => {
@@ -84,12 +116,6 @@ const UpdateSettingsForm = () => {
   if (isLoading1 || isLoading2) return <Spinner />;
 
   // typescrpt helper
-  // const holidaysData = settings?.holidays as {
-  //   fileName: string;
-  //   dates: string[];
-  // };
-
-  // typescrpt helper
   const holidaysData = currentWage?.holidays as {
     fileName: string;
     dates: string[];
@@ -141,8 +167,8 @@ const UpdateSettingsForm = () => {
       return toast.error('Year already exists.');
 
     const newSelectOption = { value: newYear, label: newYear };
-    setSelectOptYear([...(selectOptYear ?? []), newSelectOption]);
     setSelectedYear(newYear);
+    setSelectOptYear([...(selectOptYear ?? []), newSelectOption]);
     setNewYear('');
 
     addWage({ ...defaultWage, year: newYear });
@@ -182,7 +208,7 @@ const UpdateSettingsForm = () => {
   ];
 
   return (
-    <Form>
+    <Form key={selectedYear}>
       <FormRow label='Junior/Senior'>
         <Select
           id='role'
@@ -196,22 +222,22 @@ const UpdateSettingsForm = () => {
       </FormRow>
 
       <FormRow label='Add year' error={yearError}>
-        <Input
-          type='number'
-          id='new-year-input'
-          placeholder='e.g. 2023'
-          // value={newYear}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setNewYear(e.target.value)
-          }
-        />
-        <Button type='button' onClick={handleAddYear}>
-          Add New Year
-        </Button>
+        <Wrapper>
+          <Input
+            type='number'
+            id='new-year-input'
+            placeholder='e.g. 2023'
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setNewYear(e.target.value)
+            }
+          />
+          <AddButton onClick={handleAddYear}>Add Year</AddButton>
+        </Wrapper>
       </FormRow>
 
       <FormRow label='Year'>
         <Select
+          key={selectedYear}
           id='year'
           options={selectOptYear || []}
           defaultValue={selectedYear}
@@ -247,31 +273,221 @@ const UpdateSettingsForm = () => {
         />
       </FormRow>
 
-      {/* //////////////////////////////////// */}
-
-      {/* <FormRow label='Night Allowance'>
+      <FormRow label='Overpayment Jun Vest Night'>
         <Input
           type='number'
-          id='night-allowance'
-          defaultValue={settings?.night_allowance}
+          id='overpayment-jun-vest-night'
+          defaultValue={currentWage?.overpayment_jun_vest_night}
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdateSetting(e, 'night_allowance')
+            handleUpdateWage(e, 'overpayment_jun_vest_night')
           }
         />
       </FormRow>
 
-      <FormRow label='Holiday Compensation'>
+      <FormRow label='Overpayment Jun Vest Holiday'>
         <Input
           type='number'
-          id='holiday-compensation'
-          defaultValue={settings?.holiday_compensation}
+          id='overpayment-jun-vest-holiday'
+          defaultValue={currentWage?.overpayment_jun_vest_holiday}
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdateSetting(e, 'holiday_compensation')
+            handleUpdateWage(e, 'overpayment_jun_vest_holiday')
           }
         />
-      </FormRow> */}
+      </FormRow>
+
+      <FormRow label='Overpayment Jun Vest Night Holiday'>
+        <Input
+          type='number'
+          id='overpayment-jun-vest-night-holiday'
+          defaultValue={currentWage?.overpayment_jun_vest_night_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'overpayment_jun_vest_night_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Overpayment Jun Suit'>
+        <Input
+          type='number'
+          id='overpayment-jun-suit'
+          defaultValue={currentWage?.overpayment_jun_suit}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'overpayment_jun_suit')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Overpayment Jun Suit Night'>
+        <Input
+          type='number'
+          id='overpayment-jun-suit-night'
+          defaultValue={currentWage?.overpayment_jun_suit_night}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'overpayment_jun_suit_night')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Overpayment Jun Suit Holiday'>
+        <Input
+          type='number'
+          id='overpayment-jun-suit-holiday'
+          defaultValue={currentWage?.overpayment_jun_suit_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'overpayment_jun_suit_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Overpayment Jun Suit Night Holiday'>
+        <Input
+          type='number'
+          id='overpayment-jun-suit-night-holiday'
+          defaultValue={currentWage?.overpayment_jun_suit_night_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'overpayment_jun_suit_night_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Overpayment Sen Vest'>
+        <Input
+          type='number'
+          id='overpayment-sen-vest'
+          defaultValue={currentWage?.overpayment_sen_vest}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'overpayment_sen_vest')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Overpayment Sen Vest Night'>
+        <Input
+          type='number'
+          id='overpayment-sen-vest-night'
+          defaultValue={currentWage?.overpayment_sen_vest_night}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'overpayment_sen_vest_night')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Overpayment Sen Vest Holiday'>
+        <Input
+          type='number'
+          id='overpayment-sen-vest-holiday'
+          defaultValue={currentWage?.overpayment_sen_vest_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'overpayment_sen_vest_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Overpayment Sen Vest Night Holiday'>
+        <Input
+          type='number'
+          id='overpayment-sen-vest-night-holiday'
+          defaultValue={currentWage?.overpayment_sen_vest_night_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'overpayment_sen_vest_night_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Overpayment Sen Suit'>
+        <Input
+          type='number'
+          id='overpayment-sen-suit'
+          defaultValue={currentWage?.overpayment_sen_suit}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'overpayment_sen_suit')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Overpayment Sen Suit Night'>
+        <Input
+          type='number'
+          id='overpayment-sen-suit-night'
+          defaultValue={currentWage?.overpayment_sen_suit_night}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'overpayment_sen_suit_night')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Overpayment Sen Suit Holiday'>
+        <Input
+          type='number'
+          id='overpayment-sen-suit-holiday'
+          defaultValue={currentWage?.overpayment_sen_suit_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'overpayment_sen_suit_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Overpayment Sen Suit Night Holiday'>
+        <Input
+          type='number'
+          id='overpayment-sen-suit-night-holiday'
+          defaultValue={currentWage?.overpayment_sen_suit_night_holiday}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'overpayment_sen_suit_night_holiday')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Holiday Compensation Rate (%)'>
+        <Input
+          type='number'
+          id='holiday-compensation-rate'
+          defaultValue={currentWage?.holiday_compensation_rate}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'holiday_compensation_rate')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Night Allowance Rate'>
+        <Input
+          type='number'
+          id='night-allowance-rate'
+          defaultValue={currentWage?.night_allowance_rate}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'night_allowance_rate')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Insignificance Limit'>
+        <Input
+          type='number'
+          id='insignificance-limit'
+          defaultValue={currentWage?.insignificance_limit}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'insignificance_limit')
+          }
+        />
+      </FormRow>
 
       <FormRow label='Beginning Night Hours'>
         <Input

@@ -59,13 +59,14 @@ export const getJobs = async ({
   return { data, count };
 };
 
-export async function getJobsAfterYear(year: number) {
+export async function getJobsAfterYear(year: number, userId: string) {
   const startDate = new Date(year, 0, 1); // January 1st of the specified year
   const endDate = new Date(year + 1, 0, 0); // December 31st of the specified year
 
   const { data, error } = await supabase
     .from('jobs')
     .select('*')
+    .eq('user_id', userId)
     .gte('date', startDate.toISOString())
     .lt('date', endDate.toISOString());
 
