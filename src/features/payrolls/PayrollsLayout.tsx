@@ -14,7 +14,7 @@ import { useJobs } from '../jobs/useJobs';
 import Payroll from './Payroll';
 import { Combination, SalaryOptions } from '../../types';
 import Empty from '../../ui/Empty';
-import { useWage } from '../settings/useWage';
+import { useWages } from '../settings/useWages';
 
 const StyledPayrollsLayout = styled.div`
   display: grid;
@@ -29,7 +29,7 @@ const StyledPayrollsLayout = styled.div`
 
 const PayrollsLayout = () => {
   const { jobs, isLoading } = useJobs();
-  const { wage } = useWage();
+  const { wages } = useWages();
   const groupedJobs = jobs ? groupDataByMonth(jobs) : {};
 
   if (isLoading) return <Spinner />;
@@ -43,7 +43,9 @@ const PayrollsLayout = () => {
         const date = new Date(monthData?.[0]?.date || Date.now()); // Get the date for the first row of the month
         const monthName = date.toLocaleString('default', { month: 'long' });
         const year = date.getFullYear();
-        const currentWage = wage?.find((wage) => wage.year === year.toString());
+        const currentWage = wages?.find(
+          (wage) => wage.year === year.toString()
+        );
 
         const numberJobs = monthData?.length ?? 0;
 

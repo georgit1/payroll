@@ -7,9 +7,8 @@ import { HiTrash } from 'react-icons/hi2';
 import Modal from '../../ui/Modal';
 import { useDeleteJob } from '../jobs/useDeleteJob';
 import ConfirmDelete from '../../ui/ConfirmDelete';
-import { useSettings } from '../settings/useSettings';
 import { isDayHoliday } from '../../utils/helpers';
-import { JobType } from '../../types/collection';
+import { JobType, WageType } from '../../types/collection';
 
 type StyledDayProps = {
   isHoliday: boolean | undefined;
@@ -125,20 +124,24 @@ type DayProps = {
   day: Date;
   rowIdx: number;
   job: JobType | undefined;
+  wages: WageType[];
 };
 
 const getCurrentDayClass = (day: Date) => {
   return format(day, 'dd-MM-yy') === format(new Date(), 'dd-MM-yy');
 };
 
-const Day = ({ day, rowIdx, job }: DayProps) => {
+const Day = ({ day, rowIdx, job, wages }: DayProps) => {
   const { setDaySelected } = useCalendar();
-  const { settings } = useSettings();
   const { isDeleting, deleteJob } = useDeleteJob();
   const markToday = getCurrentDayClass(day);
 
+  // for holdays
+  const year = day.getFullYear();
+  const currentWage = wages?.find((wage) => wage.year === year?.toString());
+
   // typescript helper
-  const holidaysData = settings?.holidays as HolidayData;
+  const holidaysData = currentWage?.holidays as HolidayData;
   const isHoliday = isDayHoliday(day, holidaysData);
 
   // check if dresscode is suit on this day

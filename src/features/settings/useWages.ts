@@ -3,7 +3,7 @@ import { useUser } from '../authentication/useUser';
 import { getWage } from '../../services/apiWage';
 
 // export const useWage = (year?: string) => {
-export const useWage = () => {
+export const useWages = () => {
   const { user } = useUser();
   const userId = user?.id ?? '';
 
@@ -12,7 +12,7 @@ export const useWage = () => {
     error,
     //NOTE refetch not in use
     refetch,
-    data: wage,
+    data: wages,
   } = useQuery({
     // queryKey: ['wage', year],
     queryKey: ['wage'],
@@ -22,5 +22,5 @@ export const useWage = () => {
     // cacheTime: 0,
   });
 
-  return { isLoading, refetch, error, wage };
+  return { isLoading, refetch, error, wages };
 };

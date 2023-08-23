@@ -4,9 +4,9 @@ import { getMonth, isDayHoliday } from '../../utils/helpers';
 import { styled } from 'styled-components';
 import { useCalendar } from '../../context/CalenderContext';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import { useSettings } from '../settings/useSettings';
 import { useJobs } from '../jobs/useJobs';
 import { HolidayData, Job } from '../../types';
+import { WageType } from '../../types/collection';
 
 const CalendarContainer = styled.div`
   margin-top: 1.5rem;
@@ -131,8 +131,11 @@ const DayButton = styled.span`
   }
 `;
 
-const SmallCalendar = () => {
-  const { settings } = useSettings();
+type SmallCalendarProps = {
+  wages: WageType[];
+};
+
+const SmallCalendar = ({ wages }: SmallCalendarProps) => {
   const { jobs } = useJobs();
   const { monthIndex, setSmallCalendarMonth, daySelected, setDaySelected } =
     useCalendar();
@@ -172,7 +175,10 @@ const SmallCalendar = () => {
     const currDay = format(day, formatStr);
     const selectedDay = daySelected && format(daySelected, formatStr);
 
-    const holidaysData = settings?.holidays as HolidayData;
+    // for holdays
+    const year = day.getFullYear();
+    const currentWage = wages?.find((wage) => wage.year === year?.toString());
+    const holidaysData = currentWage?.holidays as HolidayData;
     const isHoliday = isDayHoliday(day, holidaysData);
 
     const formattedDay = format(day, 'yyyy-MM-dd');

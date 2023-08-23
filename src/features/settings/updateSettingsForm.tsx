@@ -13,7 +13,7 @@ import { styled } from 'styled-components';
 import Modal from '../../ui/Modal';
 import { HiOutlineInformationCircle } from 'react-icons/hi2';
 import HolidayInfo from './HolidayInfo';
-import { useWage } from './useWage';
+import { useWages } from './useWages';
 import { useUpdateWage } from './useUpdateWage';
 import { useAddWage } from './useAddWage';
 import { defaultWage } from '../../data/data-defaultValues';
@@ -82,14 +82,14 @@ const UpdateSettingsForm = () => {
     useUpdateWage(selectedYear);
 
   // const { isLoading: isLoading2, wage } = useWage(selectedYear);
-  const { isLoading: isLoading2, wage, refetch: refetchWage } = useWage();
+  const { isLoading: isLoading2, wages, refetch: refetchWage } = useWages();
   const { addWage, isAdding } = useAddWage();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   // const yearInputRef = useRef<HTMLInputElement>(null);
 
-  const currentWage = wage?.find((wage) => wage.year === selectedYear);
-  const yearsCollection = wage?.map((item) => item.year);
+  const currentWage = wages?.find((wage) => wage.year === selectedYear);
+  const yearsCollection = wages?.map((item) => item.year);
 
   const isUpdating = isUpdatingSettings || isUpdatingWage;
 

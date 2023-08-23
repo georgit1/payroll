@@ -4,6 +4,8 @@ import { getMonth } from '../../utils/helpers';
 import Month from './Month';
 import { useCalendar } from '../../context/CalenderContext';
 import Sidebar from './CalendarSidebar';
+import { useJobs } from '../jobs/useJobs';
+import { useWages } from '../settings/useWages';
 
 const StyledCalendar = styled.div`
   display: grid;
@@ -14,6 +16,8 @@ const StyledCalendar = styled.div`
 const CalendarLayout = () => {
   const [currentMonth, setCurrentMonth] = useState(getMonth());
   const { monthIndex } = useCalendar();
+  const { jobs } = useJobs();
+  const { wages } = useWages();
 
   useEffect(() => {
     setCurrentMonth(getMonth(monthIndex));
@@ -21,8 +25,10 @@ const CalendarLayout = () => {
 
   return (
     <StyledCalendar>
-      <Sidebar />
-      <Month month={currentMonth} />
+      {wages && <Sidebar wages={wages} />}
+      {jobs && wages && (
+        <Month month={currentMonth} jobs={jobs} wages={wages} />
+      )}
     </StyledCalendar>
   );
 };

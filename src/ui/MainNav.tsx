@@ -7,7 +7,7 @@ import {
   HiCalendarDays,
 } from 'react-icons/hi2';
 import { LuEuro } from 'react-icons/lu';
-import { useWage } from '../features/settings/useWage';
+import { useWage } from '../features/settings/useWages';
 import { useYear } from '../context/YearContext';
 
 type StyledNavLinkProps = {

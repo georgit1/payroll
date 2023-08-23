@@ -4,6 +4,7 @@ import InsertJob from './InsertJob';
 import Button from '../../ui/Button';
 import TableLegend from '../../ui/TableLegend';
 import { calendarLegendColors } from '../../utils/helpers';
+import { WageType } from '../../types/collection';
 
 const StyledSidebar = styled.aside`
   display: flex;
@@ -13,10 +14,14 @@ const StyledSidebar = styled.aside`
   gap: 2.5rem;
 `;
 
-const CalendarSidebar = () => {
+type CalendarSidebarProps = {
+  wages: WageType[];
+};
+
+const CalendarSidebar = ({ wages }: CalendarSidebarProps) => {
   return (
     <StyledSidebar>
-      <SmallCalendar />
+      <SmallCalendar wages={wages} />
       <InsertJob button={<Button size='small'>Insert Job</Button>} />
       <TableLegend colors={calendarLegendColors} />
     </StyledSidebar>

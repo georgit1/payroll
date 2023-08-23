@@ -1,8 +1,8 @@
 import React from 'react';
 import { styled } from 'styled-components';
 import Day from './Day';
-import { useJobs } from '../jobs/useJobs';
 import { format } from 'date-fns';
+import { JobType, WageType } from '../../types/collection';
 
 const StyledMonth = styled.div`
   display: grid;
@@ -14,10 +14,11 @@ const StyledMonth = styled.div`
 
 type MonthProps = {
   month: Date[][];
+  jobs: JobType[];
+  wages: WageType[];
 };
 
-const Month = ({ month }: MonthProps) => {
-  const { jobs } = useJobs();
+const Month = ({ month, jobs, wages }: MonthProps) => {
   return (
     <StyledMonth>
       {month.map((row, i) => (
@@ -30,6 +31,7 @@ const Month = ({ month }: MonthProps) => {
                 day={day}
                 key={idx}
                 rowIdx={i}
+                wages={wages}
                 job={dayJob?.length ? dayJob[0] : undefined}
               />
             );
