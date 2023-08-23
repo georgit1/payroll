@@ -7,8 +7,9 @@ import {
   HiCalendarDays,
 } from 'react-icons/hi2';
 import { LuEuro } from 'react-icons/lu';
-import { useWage } from '../features/settings/useWages';
-import { useYear } from '../context/YearContext';
+import { useWages } from '../features/settings/useWages';
+import { WageType } from '../types/collection';
+import { HolidayData } from '../types';
 
 type StyledNavLinkProps = {
   hasdot?: string;
@@ -64,7 +65,7 @@ const StyledNavLink = styled(NavLink)<StyledNavLinkProps>`
     display: ${({ hasdot }) => (hasdot === 'true' ? 'block' : 'none')};
     position: absolute;
     top: 50%;
-    right: 4rem;
+    right: 6rem;
     transform: translate(0, -50%);
     width: 0.6rem;
     height: 0.6rem;
@@ -74,15 +75,12 @@ const StyledNavLink = styled(NavLink)<StyledNavLinkProps>`
 `;
 
 const MainNav = () => {
-  const { year } = useYear();
-  const { wage } = useWage(year);
-  const currentWage = wage?.find((wage) => wage.year === year);
+  const { wages } = useWages();
 
-  const holidaysData = currentWage?.holidays as {
-    fileName: string;
-    dates: string[];
-  };
-  const isEmptyFile = holidaysData?.dates.length === 0;
+  const hasEmptyHolidays = wages?.some((wage: WageType) => {
+    const holidaysData = wage.holidays as HolidayData;
+    return holidaysData?.dates.length === 0;
+  });
 
   return (
     <nav>
@@ -112,7 +110,10 @@ const MainNav = () => {
           </StyledNavLink>
         </li>
         <li>
-          <StyledNavLink to='/settings' hasdot={isEmptyFile ? 'true' : 'false'}>
+          <StyledNavLink
+            to='/settings'
+            hasdot={hasEmptyHolidays ? 'true' : 'false'}
+          >
             <HiOutlineCog6Tooth />
             <span>Settings</span>
           </StyledNavLink>

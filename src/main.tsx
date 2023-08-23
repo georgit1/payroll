@@ -41,11 +41,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // dashboard stats
 
 // Settings
-// add night-hours + day-hours to wage instead
 // on add new year select should jump to new year (sometimes works)
 // make a ref instead of controlled element for year input (performance)
 // add modal "really want to add year, action can't be undone"
-// showing dot in MainNav on adding new user
 
 // typescript
 // useElementRef: https://www.youtube.com/watch?v=JuULWGuoI1A
