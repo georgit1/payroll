@@ -1,5 +1,14 @@
-import { JobType, SettingsType } from '../../types/collection';
+import { JobType } from '../../types/collection';
 import { styled } from 'styled-components';
+import {
+  calculateSalary,
+  calculateSalaryOptions,
+  extractWageData,
+} from '../../utils/salaryCalculationUtils';
+import { combinations } from '../../utils/helpers';
+import { Wage } from '../../types';
+import HolidayCalculationBlock from './HolidayCalculationBlock';
+import GeneralCalculationBlock from './GeneralCalculationBlock';
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -31,7 +40,6 @@ const StyledHeader = styled(CommonRow)`
 
 const StyledRow = styled(CommonRow)`
   padding: 1.2rem 2.4rem;
-  /* background-color: var(--color-blue-100); */
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-grey-100);
@@ -50,153 +58,60 @@ const StyledBody = styled.section`
 
 type PayrollJobTableProps = {
   jobs: JobType[];
-  settings: SettingsType;
+  wage: Wage;
 };
 
-type Role = 'jun' | 'sen';
-type Dresscode = 'vest' | 'suit';
+const PayrollCalculationTable = ({ jobs, wage }: PayrollJobTableProps) => {
+  const { night_allowance_rate: nightAllowanceRate } = wage;
 
-const PayrollCalculationTable = ({ jobs, settings }: PayrollJobTableProps) => {
-  const calculateHoursAndAmounts = (
-    role: Role,
-    dresscode: Dresscode,
-    isHoliday: boolean = false
-  ) => {
-    const filteredJobs = jobs.filter(
-      (job) =>
-        job.dresscode === dresscode &&
-        job.role === role &&
-        job.is_holiday === isHoliday
-    );
+  // prepare object totalHours for all combinations like jun/sen, day/night,...
+  const salaryOptions = calculateSalaryOptions(combinations, jobs);
 
-    const totalHours = filteredJobs.reduce(
-      (sum, cur) => sum + cur.total_hours,
-      0
-    );
-    const nightHours = filteredJobs.reduce(
-      (sum, cur) => sum + cur.night_hours,
-      0
-    );
-    const dayHours = totalHours - nightHours;
+  const {
+    // total salary
+    salary,
 
-    let dayRate;
-    let nightRate;
-    let amountDaySurcharge = 0;
-    let amountNightSurcharge = 0;
+    // night allowance
+    totalHoursNight,
+    amountNightAllowance,
+  } = calculateSalary(salaryOptions, wage);
 
-    if (!isHoliday) {
-      dayRate = settings[`${dresscode}_${role}`];
-      nightRate = settings[`${dresscode}_${role}_night`];
-    }
+  // general data
+  const junVestData = extractWageData(wage, salaryOptions, 'jun', 'vest');
+  const junSuitData = extractWageData(wage, salaryOptions, 'jun', 'suit');
+  const senVestData = extractWageData(wage, salaryOptions, 'sen', 'vest');
+  const senSuitData = extractWageData(wage, salaryOptions, 'sen', 'suit');
 
-    if (isHoliday) {
-      dayRate = settings[`${dresscode}_${role}_holiday`];
-      nightRate = settings[`${dresscode}_${role}_night_holiday`];
-    }
+  // holiday data
+  const junVestHolidayData = extractWageData(
+    wage,
+    salaryOptions,
+    'jun',
+    'vest',
+    true
+  );
 
-    if (dayRate === undefined || nightRate === undefined) {
-      throw new Error('Missing dayRate or nightRate value');
-    }
-
-    const amountDayHours = dayRate * dayHours;
-    const amountNightHours = nightRate * nightHours;
-
-    if (isHoliday) {
-      amountDaySurcharge = totalHours * dayRate;
-      amountNightSurcharge = nightHours * settings.night_holiday_surcharge;
-    }
-
-    return {
-      totalHours,
-      nightHours,
-      dayHours,
-      amountDayHours,
-      amountNightHours,
-      ...(isHoliday && { amountDaySurcharge, amountNightSurcharge }),
-    };
-  };
-
-  const junVestData = calculateHoursAndAmounts('jun', 'vest');
-  const junSuitData = calculateHoursAndAmounts('jun', 'suit');
-
-  const senVestData = calculateHoursAndAmounts('sen', 'vest');
-  const senSuitData = calculateHoursAndAmounts('sen', 'suit');
-
-  const junVestHolidayData = calculateHoursAndAmounts('jun', 'vest', true);
-  const junSuitHolidayData = calculateHoursAndAmounts('jun', 'suit', true);
-
-  const senVestHolidayData = calculateHoursAndAmounts('sen', 'vest', true);
-  const senSuitHolidayData = calculateHoursAndAmounts('sen', 'suit', true);
-
-  // holiday calculation
-  const amountVestJunHolidaySurcharge =
-    junVestHolidayData.totalHours * settings.vest_jun_holiday +
-    junVestHolidayData.nightHours * settings.night_allowance;
-
-  const amountVestSenHolidaySurcharge =
-    senVestHolidayData.totalHours * settings.vest_sen_holiday +
-    senVestHolidayData.nightHours * settings.night_allowance;
-
-  const amountSuitJunHolidaySurcharge =
-    junSuitHolidayData.totalHours * settings.suit_jun_holiday +
-    junSuitHolidayData.nightHours * settings.night_allowance;
-
-  const amountSuitSenHolidaySurcharge =
-    senSuitHolidayData.totalHours * settings.suit_sen_holiday +
-    senSuitHolidayData.nightHours * settings.night_allowance;
-
-  // night allowance
-  const totalHoursNightAllowance =
-    junVestData.nightHours +
-    junSuitData.nightHours +
-    senVestData.nightHours +
-    senSuitData.nightHours +
-    junVestHolidayData.nightHours +
-    junSuitHolidayData.nightHours +
-    senVestHolidayData.nightHours +
-    senSuitHolidayData.nightHours;
-
-  const amountNightAllowance =
-    totalHoursNightAllowance * settings.night_allowance;
-
-  // holiday compensation
-  const totalHoursHolidayCompenastion =
-    junVestData.totalHours +
-    junSuitData.totalHours +
-    senVestData.totalHours +
-    senSuitData.totalHours +
-    junVestHolidayData.totalHours +
-    junSuitHolidayData.totalHours +
-    senVestHolidayData.totalHours +
-    senSuitHolidayData.totalHours;
-
-  const amountHolidayCompensation =
-    totalHoursHolidayCompenastion * settings.holiday_compensation;
-
-  // total amount
-  const totalAmount =
-    junVestData.amountDayHours +
-    junVestData.amountNightHours +
-    junSuitData.amountDayHours +
-    junSuitData.amountNightHours +
-    senVestData.amountDayHours +
-    senVestData.amountNightHours +
-    senSuitData.amountDayHours +
-    senSuitData.amountNightHours +
-    junVestHolidayData.amountDayHours +
-    junVestHolidayData.amountNightHours +
-    senVestHolidayData.amountDayHours +
-    senVestHolidayData.amountNightHours +
-    junSuitHolidayData.amountDayHours +
-    junSuitHolidayData.amountNightHours +
-    senSuitHolidayData.amountDayHours +
-    senSuitHolidayData.amountNightHours +
-    amountVestJunHolidaySurcharge +
-    amountVestSenHolidaySurcharge +
-    amountSuitJunHolidaySurcharge +
-    amountSuitSenHolidaySurcharge +
-    amountNightAllowance +
-    amountHolidayCompensation;
+  const junSuitHolidayData = extractWageData(
+    wage,
+    salaryOptions,
+    'jun',
+    'suit',
+    true
+  );
+  const senVestHolidayData = extractWageData(
+    wage,
+    salaryOptions,
+    'sen',
+    'vest',
+    true
+  );
+  const senSuitHolidayData = extractWageData(
+    wage,
+    salaryOptions,
+    'sen',
+    'suit',
+    true
+  );
 
   return (
     <StyledTable role='table'>
@@ -207,199 +122,48 @@ const PayrollCalculationTable = ({ jobs, settings }: PayrollJobTableProps) => {
         <div>amount(€)</div>
       </StyledHeader>
       <StyledBody>
+        {/* general */}
         {junVestData.totalHours !== 0 && (
-          <>
-            <StyledRow role='row'>
-              <div>Sec FW jun T</div>
-              <div>{junVestData.dayHours.toFixed(2)}</div>
-              <div>{settings.vest_jun}</div>
-              <div>{junVestData.amountDayHours.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec FW jun N</div>
-              <div>{junVestData.nightHours.toFixed(2)}</div>
-              <div>{settings.vest_jun_night}</div>
-              <div>{junVestData.amountNightHours.toFixed(2)}</div>
-            </StyledRow>
-          </>
+          <GeneralCalculationBlock wageData={junVestData} />
         )}
         {junSuitData.totalHours !== 0 && (
-          <>
-            <StyledRow role='row'>
-              <div>Sec Anz FW jun T</div>
-              <div>{junSuitData.dayHours.toFixed(2)}</div>
-              <div>{settings.suit_jun}</div>
-              <div>{junSuitData.amountDayHours.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec Anz FW jun N</div>
-              <div>{junSuitData.nightHours.toFixed(2)}</div>
-              <div>{settings.suit_jun_night}</div>
-              <div>{junSuitData.amountNightHours.toFixed(2)}</div>
-            </StyledRow>
-          </>
+          <GeneralCalculationBlock wageData={junSuitData} />
         )}
         {senVestData.totalHours !== 0 && (
-          <>
-            <StyledRow role='row'>
-              <div>Sec FW sen T</div>
-              <div>{senVestData.dayHours.toFixed(2)}</div>
-              <div>{settings.vest_sen}</div>
-              <div>{senVestData.amountDayHours.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec FW sen N</div>
-              <div>{senVestData.nightHours.toFixed(2)}</div>
-              <div>{settings.vest_sen_night}</div>
-              <div>{senVestData.amountNightHours.toFixed(2)}</div>
-            </StyledRow>
-          </>
+          <GeneralCalculationBlock wageData={senVestData} />
         )}
         {senSuitData.totalHours !== 0 && (
-          <>
-            <StyledRow role='row'>
-              <div>Sec Anz FW sen T</div>
-              <div>{senSuitData.dayHours.toFixed(2)}</div>
-              <div>{settings.suit_sen}</div>
-              <div>{senSuitData.amountDayHours.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec Anz FW sen N</div>
-              <div>{senSuitData.nightHours.toFixed(2)}</div>
-              <div>{settings.suit_sen_night}</div>
-              <div>{senSuitData.amountNightHours.toFixed(2)}</div>
-            </StyledRow>
-          </>
+          <GeneralCalculationBlock wageData={senSuitData} />
         )}
+
+        {/* holiday */}
         {junVestHolidayData.totalHours !== 0 && (
-          <>
-            <StyledRow role='row'>
-              <div>Sec FW jun T Hol</div>
-              <div>{junVestHolidayData.dayHours.toFixed(2)}</div>
-              <div>{settings.vest_jun_holiday}</div>
-              <div>{junVestHolidayData.amountDayHours.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec FW jun N Hol</div>
-              <div>{junVestHolidayData.nightHours.toFixed(2)}</div>
-              <div>{settings.vest_jun_night_holiday}</div>
-              <div>{junVestHolidayData.amountNightHours.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec hol surcharge jun T</div>
-              <div>{junVestHolidayData.totalHours.toFixed(2)}</div>
-              <div>{settings.vest_jun_holiday}</div>
-              <div>{junVestHolidayData.amountDaySurcharge!.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec hol surcharge jun N</div>
-              <div>{junVestHolidayData.nightHours.toFixed(2)}</div>
-              <div>{settings.night_holiday_surcharge}</div>
-              <div>{junVestHolidayData.amountNightSurcharge!.toFixed(2)}</div>
-            </StyledRow>
-          </>
-        )}
-        {senVestHolidayData.totalHours !== 0 && (
-          <>
-            <StyledRow role='row'>
-              <div>Sec FW sen T Hol</div>
-              <div>{senVestHolidayData.dayHours.toFixed(2)}</div>
-              <div>{settings.vest_sen_holiday}</div>
-              <div>{senVestHolidayData.amountDayHours.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec FW sen N Hol</div>
-              <div>{senVestHolidayData.nightHours.toFixed(2)}</div>
-              <div>{settings.vest_sen_night_holiday}</div>
-              <div>{senVestHolidayData.amountNightHours.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec hol surcharge sen T</div>
-              <div>{senVestHolidayData.totalHours.toFixed(2)}</div>
-              <div>{settings.vest_sen_holiday}</div>
-              <div>{senVestHolidayData.amountDaySurcharge!.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec hol surcharge sen N</div>
-              <div>{senVestHolidayData.nightHours.toFixed(2)}</div>
-              <div>{settings.night_holiday_surcharge}</div>
-              <div>{senVestHolidayData.amountNightSurcharge!.toFixed(2)}</div>
-            </StyledRow>
-          </>
+          <HolidayCalculationBlock wageData={junVestHolidayData} />
         )}
         {junSuitHolidayData.totalHours !== 0 && (
-          <>
-            <StyledRow role='row'>
-              <div>Sec Anz FW jun T Hol</div>
-              <div>{junSuitHolidayData.dayHours.toFixed(2)}</div>
-              <div>{settings.suit_jun_holiday}</div>
-              <div>{junSuitHolidayData.amountDayHours.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec Anz FW jun N Hol</div>
-              <div>{junSuitHolidayData.nightHours.toFixed(2)}</div>
-              <div>{settings.suit_jun_night_holiday}</div>
-              <div>{junSuitHolidayData.amountNightHours.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec Anz hol surcharge jun T</div>
-              <div>{junSuitHolidayData.totalHours.toFixed(2)}</div>
-              <div>{settings.suit_jun_holiday}</div>
-              <div>{junSuitHolidayData.amountDaySurcharge!.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec Anz hol surcharge jun N</div>
-              <div>{junSuitHolidayData.nightHours.toFixed(2)}</div>
-              <div>{settings.night_holiday_surcharge}</div>
-              <div>{junSuitHolidayData.amountNightSurcharge!.toFixed(2)}</div>
-            </StyledRow>
-          </>
+          <HolidayCalculationBlock wageData={junSuitHolidayData} />
+        )}
+        {senVestHolidayData.totalHours !== 0 && (
+          <HolidayCalculationBlock wageData={senVestHolidayData} />
         )}
         {senSuitHolidayData.totalHours !== 0 && (
-          <>
-            <StyledRow role='row'>
-              <div>Sec Anz FW sen T Hol</div>
-              <div>{senSuitHolidayData.dayHours.toFixed(2)}</div>
-              <div>{settings.suit_sen_holiday}</div>
-              <div>{senSuitHolidayData.amountDayHours.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec Anz FW sen N Hol</div>
-              <div>{senSuitHolidayData.nightHours.toFixed(2)}</div>
-              <div>{settings.suit_sen_night_holiday}</div>
-              <div>{senSuitHolidayData.amountNightHours.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec Anz hol surcharge sen T</div>
-              <div>{senSuitHolidayData.totalHours.toFixed(2)}</div>
-              <div>{settings.suit_sen_holiday}</div>
-              <div>{senSuitHolidayData.amountDaySurcharge!.toFixed(2)}</div>
-            </StyledRow>
-            <StyledRow role='row'>
-              <div>Sec Anz hol surcharge sen N</div>
-              <div>{senSuitHolidayData.nightHours.toFixed(2)}</div>
-              <div>{settings.night_holiday_surcharge}</div>
-              <div>{senSuitHolidayData.amountNightSurcharge!.toFixed(2)}</div>
-            </StyledRow>
-          </>
+          <HolidayCalculationBlock wageData={senSuitHolidayData} />
         )}
+
+        {/* night allowance */}
         <StyledRow role='row'>
           <div>Night Allowance</div>
-          <div>{totalHoursNightAllowance.toFixed(2)}</div>
-          <div>{settings.night_allowance}</div>
+          <div>{totalHoursNight.toFixed(2)}</div>
+          <div>{nightAllowanceRate}</div>
           <div>{amountNightAllowance.toFixed(2)}</div>
         </StyledRow>
-        <StyledRow role='row'>
-          <div>Holiday Compensation</div>
-          <div>{totalHoursHolidayCompenastion.toFixed(2)}</div>
-          <div>{settings.holiday_compensation}</div>
-          <div>{amountHolidayCompensation.toFixed(2)}</div>
-        </StyledRow>
+
+        {/* total salary */}
         <StyledResultRow role='row'>
           <div>Total</div>
           <div></div>
           <div></div>
-          <div>{totalAmount.toFixed(2)}</div>
+          <div>{salary.toFixed(2)}</div>
         </StyledResultRow>
       </StyledBody>
     </StyledTable>

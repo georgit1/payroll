@@ -1,20 +1,14 @@
 import { styled } from 'styled-components';
 import Spinner from '../../ui/Spinner';
-import {
-  calculateSalary,
-  capitalizeFirstLetter,
-  combinations,
-  getHoursByDresscodeAndRole,
-  groupDataByMonth,
-  initializeSalaryOptions,
-  toCamelCase,
-  toPascalCase,
-} from '../../utils/helpers';
+import { combinations, groupDataByMonth } from '../../utils/helpers';
 import { useJobs } from '../jobs/useJobs';
 import Payroll from './Payroll';
-import { Combination, SalaryOptions } from '../../types';
 import Empty from '../../ui/Empty';
 import { useWages } from '../settings/useWages';
+import {
+  calculateSalary,
+  calculateSalaryOptions,
+} from '../../utils/salaryCalculationUtils';
 
 const StyledPayrollsLayout = styled.div`
   display: grid;
@@ -55,65 +49,14 @@ const PayrollsLayout = () => {
           }, 0)
           .toFixed(2);
 
-        //
+        // prepare object for all different totalHours like jun/sen, day/night,...
+        const salaryOptions =
+          monthData && calculateSalaryOptions(combinations, monthData);
 
-        const calculateSalaryOptions = (
-          combinations: Combination[]
-        ): SalaryOptions => {
-          const salaryOptions: SalaryOptions = initializeSalaryOptions();
-
-          combinations.forEach(({ dresscode, role, timeType }) => {
-            let key: string | undefined;
-
-            if (timeType.startsWith('total')) {
-              const result = toCamelCase(timeType);
-
-              key = `${result}${capitalizeFirstLetter(
-                dresscode
-              )}${capitalizeFirstLetter(role)}`;
-            }
-
-            if (timeType.startsWith('night')) {
-              const result = toPascalCase(timeType);
-              key = `total${result}${capitalizeFirstLetter(
-                dresscode
-              )}${capitalizeFirstLetter(role)}`;
-            }
-
-            if (key) {
-              const holidayKey = `${key}Holiday`;
-              salaryOptions[key] = Number(
-                monthData
-                  ? getHoursByDresscodeAndRole(
-                      monthData,
-                      dresscode,
-                      role,
-                      timeType
-                    )
-                  : 0
-              );
-
-              salaryOptions[holidayKey] = Number(
-                monthData
-                  ? getHoursByDresscodeAndRole(
-                      monthData,
-                      dresscode,
-                      role,
-                      timeType,
-                      true
-                    )
-                  : 0
-              );
-            }
-          });
-
-          return salaryOptions;
-        };
-
-        const salaryOptions = calculateSalaryOptions(combinations);
-
-        if (!currentWage) throw new Error('No wage found!');
-        const salary = calculateSalary(salaryOptions, currentWage);
+        // calculate salary with data based on this year
+        if (!currentWage || !salaryOptions)
+          throw new Error('No wage data available');
+        const { salary } = calculateSalary(salaryOptions, currentWage);
 
         // //////////////////////////////////////////////////
         return (
@@ -133,45 +76,3 @@ const PayrollsLayout = () => {
 };
 
 export default PayrollsLayout;
-
-// ///////////////////
-// const salaryOptions = {};
-
-// combinations.forEach(({ dresscode, role, timeType }) => {
-//   let key;
-//   if (timeType.startsWith('total')) {
-//     const result = toCamelCase(timeType);
-
-//     key = `${result}${dresscode[0].toUpperCase()}${dresscode.slice(
-//       1
-//     )}${role[0].toUpperCase()}${role.slice(1)}`;
-//   }
-
-//   if (timeType.startsWith('night')) {
-//     const result = toPascalCase(timeType);
-
-//     key = `total${result}${dresscode[0].toUpperCase()}${dresscode.slice(
-//       1
-//     )}${role[0].toUpperCase()}${role.slice(1)}`;
-//   }
-
-//   const holidayKey = `${key}Holiday`;
-
-//   salaryOptions[key] = Number(
-//     monthData
-//       ? getHoursByDresscodeAndRole(monthData, dresscode, role, timeType)
-//       : 0
-//   );
-
-//   salaryOptions[holidayKey] = Number(
-//     monthData
-//       ? getHoursByDresscodeAndRole(
-//           monthData,
-//           dresscode,
-//           role,
-//           timeType,
-//           true
-//         )
-//       : 0
-//   );
-// });

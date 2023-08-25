@@ -10,8 +10,7 @@ import {
   endOfMonth,
 } from 'date-fns';
 import Papa from 'papaparse';
-import { WageType } from '../types/collection';
-import { Combination, HolidayData } from '../types';
+import { Combination, HolidayData, Job } from '../types';
 
 export const legendColors = [
   { color: 'var(--color-grey-50', label: 'vest' },
@@ -69,18 +68,11 @@ export const toPascalCase = (input: string): string => {
   return capitalized;
 };
 
-type DataRow = {
-  dresscode: string;
-  role: string;
-  is_holiday: boolean;
-  [key: string]: number | string | boolean;
-};
-
-export const getHoursByDresscodeAndRole = <T extends keyof DataRow>(
-  data: DataRow[],
+export const getHoursByDresscodeAndRole = (
+  data: Job[],
   dresscode: string,
   role: string,
-  property: T,
+  timeType: keyof Job,
   isHoliday: boolean = false
 ): string => {
   const hours = data
@@ -90,8 +82,8 @@ export const getHoursByDresscodeAndRole = <T extends keyof DataRow>(
         row.role === role &&
         row.is_holiday === isHoliday
     )
-    .reduce((acc: number, cur: DataRow) => {
-      const propertyValue = cur[property];
+    .reduce((acc: number, cur: Job) => {
+      const propertyValue = cur[timeType];
       if (typeof propertyValue === 'number') {
         return acc + propertyValue;
       }
@@ -207,26 +199,27 @@ type GroupedData<T> = {
   [key: string]: T[];
 };
 
-export const groupDataByMonth = <T extends { date: string }>(
-  data: T[]
-): GroupedData<T> => {
-  const groupedData: GroupedData<T> = {};
+export const groupDataByMonth = (data: Job[]): GroupedData<Job> => {
+  const groupedData: GroupedData<Job> = {};
 
   if (!data) {
     return groupedData;
   }
 
+  // create array with objects grouped by key e.g. 2023-06
   data.forEach((row) => {
-    const date = new Date(row.date);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
+    if (row.date !== null) {
+      const date = new Date(row.date);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
 
-    const key = `${year}-${month}`;
-    if (!groupedData[key]) {
-      groupedData[key] = [];
+      const key = `${year}-${month}`;
+      if (!groupedData[key]) {
+        groupedData[key] = [];
+      }
+
+      groupedData[key]?.push(row);
     }
-
-    groupedData[key]?.push(row);
   });
 
   return groupedData;
@@ -243,288 +236,6 @@ export const formatDate = (dateString: string): string => {
 export const removeTrailingZeros = (num: number): string => {
   const trimmedNum = num.toFixed(2).replace(/\.?0*$/, '');
   return trimmedNum;
-};
-
-type SalaryOptions = {
-  totalHoursVestJun: number;
-  totalHoursVestJunHoliday: number;
-
-  totalHoursVestSen: number;
-  totalHoursVestSenHoliday: number;
-
-  totalHoursSuitJun: number;
-  totalHoursSuitJunHoliday: number;
-
-  totalHoursSuitSen: number;
-  totalHoursSuitSenHoliday: number;
-
-  totalNightHoursVestJun: number;
-  totalNightHoursVestJunHoliday: number;
-
-  totalNightHoursVestSen: number;
-  totalNightHoursVestSenHoliday: number;
-
-  totalNightHoursSuitJun: number;
-  totalNightHoursSuitJunHoliday: number;
-
-  totalNightHoursSuitSen: number;
-  totalNightHoursSuitSenHoliday: number;
-};
-
-export const calculateSalary = (
-  salaryOptions: SalaryOptions,
-  currentWage: WageType
-) => {
-  const {
-    totalHoursVestJun,
-    totalHoursVestJunHoliday,
-
-    totalHoursVestSen,
-    totalHoursVestSenHoliday,
-
-    totalHoursSuitJun,
-    totalHoursSuitJunHoliday,
-
-    totalHoursSuitSen,
-    totalHoursSuitSenHoliday,
-
-    totalNightHoursVestJun,
-    totalNightHoursVestJunHoliday,
-
-    totalNightHoursVestSen,
-    totalNightHoursVestSenHoliday,
-
-    totalNightHoursSuitJun,
-    totalNightHoursSuitJunHoliday,
-
-    totalNightHoursSuitSen,
-    totalNightHoursSuitSenHoliday,
-  } = salaryOptions;
-
-  const {
-    base_wage: baseWage,
-    holiday_compensation: holidayCompansation,
-    night_allowance_rate: nightAllowanceRate,
-    overpayment_jun_vest: overpaymentJunVest,
-    overpayment_jun_vest_night: overpaymentJunVestNight,
-    overpayment_jun_vest_holiday: overpaymentJunVestHoliday,
-    overpayment_jun_vest_night_holiday: overpaymentJunVestNightHoliday,
-    overpayment_jun_suit: overpaymentJunSuit,
-    overpayment_jun_suit_night: overpaymentJunSuitNight,
-    overpayment_jun_suit_holiday: overpaymentJunSuitHoliday,
-    overpayment_jun_suit_night_holiday: overpaymentJunSuitNightHoliday,
-    overpayment_sen_vest: overpaymentSenVest,
-    overpayment_sen_vest_night: overpaymentSenVestNight,
-    overpayment_sen_vest_holiday: overpaymentSenVestHoliday,
-    overpayment_sen_vest_night_holiday: overpaymentSenVestNightHoliday,
-    overpayment_sen_suit: overpaymentSenSuit,
-    overpayment_sen_suit_night: overpaymentSenSuitNight,
-    overpayment_sen_suit_holiday: overpaymentSenSuitHoliday,
-    overpayment_sen_suit_night_holiday: overpaymentSenSuitNightHoliday,
-  } = currentWage;
-
-  const hourlyRateVestJun = baseWage + overpaymentJunVest;
-  const hourlyRateVestJunNight = baseWage + overpaymentJunVestNight;
-  const hourlyRateVestJunHoliday = baseWage + overpaymentJunVestHoliday;
-  const hourlyRateVestJunNightHoliday =
-    baseWage + overpaymentJunVestNightHoliday;
-
-  const hourlyRateVestSen = baseWage + overpaymentSenVest;
-  const hourlyRateVestSenNight = baseWage + overpaymentSenVestNight;
-  const hourlyRateVestSenHoliday = baseWage + overpaymentSenVestHoliday;
-  const hourlyRateVestSenNightHoliday =
-    baseWage + overpaymentSenVestNightHoliday;
-
-  const hourlyRateSuitJun = baseWage + overpaymentJunSuit;
-  const hourlyRateSuitJunNight = baseWage + overpaymentJunSuitNight;
-  const hourlyRateSuitJunHoliday = baseWage + overpaymentJunSuitHoliday;
-  const hourlyRateSuitJunNightHoliday =
-    baseWage + overpaymentJunSuitNightHoliday;
-
-  const hourlyRateSuitSen = baseWage + overpaymentSenSuit;
-  const hourlyRateSuitSenNight = baseWage + overpaymentSenSuitNight;
-  const hourlyRateSuitSenHoliday = baseWage + overpaymentSenSuitHoliday;
-  const hourlyRateSuitSenNightHoliday =
-    baseWage + overpaymentSenSuitNightHoliday;
-
-  // calculation day hours ////////////////////////////////////////
-  const dayHoursVestJun = totalHoursVestJun - totalNightHoursVestJun;
-  const dayHoursVestJunHoliday =
-    totalHoursVestJunHoliday - totalNightHoursVestJunHoliday;
-
-  const dayHoursVestSen = totalHoursVestSen - totalNightHoursVestSen;
-  const dayHoursVestSenHoliday =
-    totalHoursVestSenHoliday - totalNightHoursVestSenHoliday;
-
-  const dayHoursSuitJun = totalHoursSuitJun - totalNightHoursSuitJun;
-  const dayHoursSuitJunHoliday =
-    totalHoursSuitJunHoliday - totalNightHoursSuitJunHoliday;
-
-  const dayHoursSuitSen = totalHoursSuitSen - totalNightHoursSuitSen;
-  const dayHoursSuitSenHoliday =
-    totalHoursSuitSenHoliday - totalNightHoursSuitSenHoliday;
-
-  // calculation total hours ////////////////////////////////////////
-  const totalHoursNightJun = totalNightHoursVestJun + totalNightHoursSuitJun;
-  const totalHoursNightJunHoliday =
-    totalNightHoursVestJunHoliday + totalNightHoursSuitJunHoliday;
-
-  const totalHoursNightSen = totalNightHoursVestSen + totalNightHoursSuitSen;
-  const totalHoursNightSenHoliday =
-    totalNightHoursVestSenHoliday + totalNightHoursSuitSenHoliday;
-
-  const totalHoursNight =
-    totalHoursNightJun +
-    totalHoursNightSen +
-    totalHoursNightJunHoliday +
-    totalHoursNightSenHoliday;
-
-  // calculate parts of salary ////////////////////////////////////////
-  const amountVestDayJun = dayHoursVestJun * hourlyRateVestJun;
-  const amountVestDaySen = dayHoursVestSen * hourlyRateVestSen;
-  const amountVestNightJun = totalNightHoursVestJun * hourlyRateVestJunNight;
-  const amountVestNightSen = totalNightHoursVestSen * hourlyRateVestSenNight;
-  const amountSuitDayJun = dayHoursSuitJun * hourlyRateSuitJun;
-  const amountSuitDaySen = dayHoursSuitSen * hourlyRateSuitSen;
-  const amountSuitNightJun = totalNightHoursSuitJun * hourlyRateSuitJunNight;
-  const amountSuitNightSen = totalNightHoursSuitSen * hourlyRateSuitSenNight;
-
-  const amountNightAllowance = totalHoursNight * nightAllowanceRate;
-
-  // holiday compensation ///////////////////////////////////////////////
-  const holidayCompansationRate = holidayCompansation / 100;
-
-  // 1) day
-  const holidayCompensationRateVestJun =
-    hourlyRateVestJun * holidayCompansationRate;
-  const holidayCompensationRateVestSen =
-    hourlyRateVestSen * holidayCompansationRate;
-  const holidayCompensationRateSuitJun =
-    hourlyRateSuitJun * holidayCompansationRate;
-  const holidayCompensationRateSuitSen =
-    hourlyRateSuitSen * holidayCompansationRate;
-
-  // 2) night
-  const holidayCompensationRateVestJunNight =
-    hourlyRateVestJunNight * holidayCompansationRate;
-  const holidayCompensationRateVestSenNight =
-    hourlyRateVestSenNight * holidayCompansationRate;
-  const holidayCompensationRateSuitJunNight =
-    hourlyRateSuitJunNight * holidayCompansationRate;
-  const holidayCompensationRateSuitSenNight =
-    hourlyRateSuitSenNight * holidayCompansationRate;
-
-  const amountHolidayCompensation =
-    dayHoursVestJun * holidayCompensationRateVestJun +
-    dayHoursVestSen * holidayCompensationRateVestSen +
-    dayHoursSuitJun * holidayCompensationRateSuitJun +
-    dayHoursSuitSen * holidayCompensationRateSuitSen +
-    totalNightHoursVestJun * holidayCompensationRateVestJunNight +
-    totalNightHoursVestSen * holidayCompensationRateVestSenNight +
-    totalNightHoursSuitJun * holidayCompensationRateSuitJunNight +
-    totalNightHoursSuitSen * holidayCompensationRateSuitSenNight;
-
-  //  calculate holiday salaries /////////////////////////////////////////////
-  const amountVestDayJunHoliday =
-    dayHoursVestJunHoliday * hourlyRateVestJunHoliday;
-  const amountVestNightJunHoliday =
-    totalNightHoursVestJunHoliday * hourlyRateVestJunNightHoliday;
-  const amountVestDaySenHoliday =
-    dayHoursVestSenHoliday * hourlyRateVestSenHoliday;
-  const amountVestNightSenHoliday =
-    totalNightHoursVestSenHoliday * hourlyRateVestSenNightHoliday;
-  const amountSuitDayJunHoliday =
-    dayHoursSuitJunHoliday * hourlyRateSuitJunHoliday;
-  const amountSuitNightJunHoliday =
-    totalNightHoursSuitJunHoliday * hourlyRateSuitJunNightHoliday;
-  const amountSuitDaySenHoliday =
-    dayHoursSuitSenHoliday * hourlyRateSuitSenHoliday;
-  const amountSuitNightSenHoliday =
-    totalNightHoursSuitSenHoliday * hourlyRateSuitSenNightHoliday;
-
-  // holiday surcharge NOTE (addiere Tag + Nacht zusammen (in zB totalHoursVestJunHoliday bereits enthalten) für Fiertagszuschlag -> siehe Juni 2022 4. Zeile)
-  const amountVestJunHolidaySurcharge =
-    totalHoursVestJunHoliday * hourlyRateVestJunHoliday +
-    totalNightHoursVestJunHoliday * nightAllowanceRate;
-
-  const amountVestSenHolidaySurcharge =
-    totalHoursVestSenHoliday * hourlyRateVestSenHoliday +
-    totalNightHoursVestSenHoliday * nightAllowanceRate;
-
-  const amountSuitJunHolidaySurcharge =
-    totalHoursSuitJunHoliday * hourlyRateSuitJunHoliday +
-    totalNightHoursSuitJunHoliday * nightAllowanceRate;
-
-  const amountSuitSenHolidaySurcharge =
-    totalHoursSuitSenHoliday * hourlyRateSuitSenHoliday +
-    totalNightHoursSuitSenHoliday * nightAllowanceRate;
-
-  // holiday compensation holiday ///////////////////////////////////////////////
-
-  // 1) day
-  const holidayCompensationRateVestJunHoliday =
-    hourlyRateVestJunHoliday * holidayCompansationRate;
-  const holidayCompensationRateVestSenHoliday =
-    hourlyRateVestSenHoliday * holidayCompansationRate;
-  const holidayCompensationRateSuitJunHoliday =
-    hourlyRateSuitJunHoliday * holidayCompansationRate;
-  const holidayCompensationRateSuitSenHoliday =
-    hourlyRateSuitSenHoliday * holidayCompansationRate;
-
-  // 2) night
-  const holidayCompensationRateVestJunNightHoliday =
-    hourlyRateVestJunNightHoliday * holidayCompansationRate;
-  const holidayCompensationRateVestSenNightHoliday =
-    hourlyRateVestSenNightHoliday * holidayCompansationRate;
-  const holidayCompensationRateSuitJunNightHoliday =
-    hourlyRateSuitJunNightHoliday * holidayCompansationRate;
-  const holidayCompensationRateSuitSenNightHoliday =
-    hourlyRateSuitSenNightHoliday * holidayCompansationRate;
-
-  //  holiday compensation on holidays - day
-  const amountHolidayCompensationDayHoliday =
-    dayHoursVestJunHoliday * holidayCompensationRateVestJunHoliday +
-    dayHoursVestSenHoliday * holidayCompensationRateVestSenHoliday +
-    dayHoursSuitJunHoliday * holidayCompensationRateSuitJunHoliday +
-    dayHoursSuitSenHoliday * holidayCompensationRateSuitSenHoliday;
-
-  //  holiday compensation on holidays - night
-  const amountHolidayCompensationNightHoliday =
-    totalNightHoursVestJunHoliday * holidayCompensationRateVestJunNightHoliday +
-    totalNightHoursVestSenHoliday * holidayCompensationRateVestSenNightHoliday +
-    totalNightHoursSuitJunHoliday * holidayCompensationRateSuitJunNightHoliday +
-    totalNightHoursSuitSenHoliday * holidayCompensationRateSuitSenNightHoliday;
-
-  const totalamountHolidayCompensationHoliday =
-    amountHolidayCompensationDayHoliday + amountHolidayCompensationNightHoliday;
-
-  // calculation total salary //////////////////////////////////////////////
-  const salary =
-    amountVestDayJun +
-    amountVestDaySen +
-    amountVestNightJun +
-    amountVestNightSen +
-    amountSuitDayJun +
-    amountSuitDaySen +
-    amountSuitNightJun +
-    amountSuitNightSen +
-    amountVestDayJunHoliday +
-    amountVestDaySenHoliday +
-    amountVestNightJunHoliday +
-    amountVestNightSenHoliday +
-    amountSuitDayJunHoliday +
-    amountSuitDaySenHoliday +
-    amountSuitNightJunHoliday +
-    amountSuitNightSenHoliday +
-    amountVestJunHolidaySurcharge +
-    amountVestSenHolidaySurcharge +
-    amountSuitJunHolidaySurcharge +
-    amountSuitSenHolidaySurcharge +
-    amountNightAllowance +
-    amountHolidayCompensation +
-    totalamountHolidayCompensationHoliday;
-
-  return salary;
 };
 
 // Helper function to capitalize a string
@@ -544,13 +255,6 @@ export const extractDataFromCsv = (file: File): Promise<CsvData> => {
     reader.onload = () => {
       const csvData = reader.result as string;
       const parsedData = Papa.parse(csvData, { skipEmptyLines: true });
-
-      // Check if parsedData.data is empty
-      // if (!parsedData.data || parsedData.data.length === 0) {
-      //   alert('CSV file is empty or contains no valid data.');
-      //   throw new Error('CSV file is empty or contains no valid data.');
-      // }
-
       const dates = parsedData.data.map((row: any) => {
         // Regular expression to extract day, month, and year from "dd.mm.yyyy" format
         const dateRegex = /^(\d{2})\.(\d{2})\.(\d{4})$/;
@@ -582,68 +286,6 @@ export const extractDataFromCsv = (file: File): Promise<CsvData> => {
 
     reader.readAsText(file);
   });
-};
-
-// export const extractDataFromCsv = (file: File): Promise<string[]> => {
-//   return new Promise((resolve) => {
-//     const reader = new FileReader();
-
-//     reader.onload = () => {
-//       const csvData = reader.result as string;
-//       const parsedData = Papa.parse(csvData, { skipEmptyLines: true });
-//       const dates = parsedData.data.map((row: any) => {
-//         // Regular expression to extract day, month, and year from "dd.mm.yyyy" format
-//         const dateRegex = /^(\d{2})\.(\d{2})\.(\d{4})$/;
-//         const [, day, month, year] = row[0].match(dateRegex) || [];
-//         if (day && month && year) {
-//           // Convert to "yyyy-mm-dd" format
-//           return `${year}-${month}-${day}`;
-//         } else {
-//           alert(
-//             'Invalid date format in the CSV file. Dates should be in the format "dd.mm.yyyy".'
-//           );
-//           throw new Error(
-//             'Invalid date format in the CSV file. Dates should be in the format "dd.mm.yyyy".'
-//           );
-//         }
-//       });
-
-//       resolve(dates);
-//     };
-
-//     reader.onerror = () => {
-//       throw new Error('Failed to read the CSV file.');
-//     };
-
-//     reader.readAsText(file);
-//   });
-// };
-
-export const initializeSalaryOptions = (): SalaryOptions => {
-  const keys: (keyof SalaryOptions)[] = [
-    // List all the keys here based on the combinations
-    'totalHoursVestJun',
-    'totalHoursVestJunHoliday',
-    'totalHoursVestSen',
-    'totalHoursVestSenHoliday',
-    'totalHoursSuitJun',
-    'totalHoursSuitJunHoliday',
-    'totalHoursSuitSen',
-    'totalHoursSuitSenHoliday',
-    'totalNightHoursVestJun',
-    'totalNightHoursVestJunHoliday',
-    'totalNightHoursVestSen',
-    'totalNightHoursVestSenHoliday',
-    'totalNightHoursSuitJun',
-    'totalNightHoursSuitJunHoliday',
-    'totalNightHoursSuitSen',
-    'totalNightHoursSuitSenHoliday',
-  ];
-
-  return keys.reduce((options, key) => {
-    options[key] = 0;
-    return options;
-  }, {} as SalaryOptions);
 };
 
 export const getMonth = (month: number = new Date().getMonth()): Date[][] => {

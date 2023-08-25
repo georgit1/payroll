@@ -68,7 +68,6 @@ const CreateJobForm = ({
   } = useForm<Job>({
     defaultValues: isEditSession || isCalendar ? editValues : {},
   });
-  console.log(wages);
 
   const onSubmit = (data: Job) => {
     // check if day matches with day of holidays array

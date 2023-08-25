@@ -24,9 +24,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // performance check, especially network requests (all hooks), Calendar days
 // lightHouse opimizitaion
 // test evereything without holiday file
+// check .env for upload
 // delete user
 // console errors
 // sort css props
+// iPad Mini responsive
 
 // where I use useJobbyDate -> doesnt it need userId??
 // PayrollCalculationTable

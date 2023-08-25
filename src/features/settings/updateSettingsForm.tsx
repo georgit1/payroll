@@ -18,7 +18,6 @@ import { useUpdateWage } from './useUpdateWage';
 import { useAddWage } from './useAddWage';
 import { defaultWage } from '../../data/data-defaultValues';
 import { toast } from 'react-hot-toast';
-import { useYear } from '../../context/YearContext';
 
 const Error = styled.span`
   font-size: 1.4rem;
@@ -72,9 +71,6 @@ const UpdateSettingsForm = () => {
     { value: string; label: string }[] | null
   >(null);
   const [yearError, setYearError] = useState('');
-
-  // context
-  const { setYear } = useYear();
 
   const { isLoading: isLoading1, settings } = useSettings();
   const { isUpdating: isUpdatingSettings, updateSetting } = useUpdateSetting();
@@ -248,7 +244,6 @@ const UpdateSettingsForm = () => {
           disabled={isUpdating}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
             setSelectedYear(e.target.value);
-            setYear(e.target.value);
           }}
         />
       </FormRow>
