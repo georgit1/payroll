@@ -11,6 +11,11 @@ const StyledCalendar = styled.div`
   display: grid;
   grid-template-columns: 22rem 1fr;
   column-gap: 0.4rem;
+
+  /* iPad Mini */
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const CalendarLayout = () => {

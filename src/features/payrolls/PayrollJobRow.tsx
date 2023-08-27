@@ -25,14 +25,11 @@ const Stacked = styled.div`
 
 const PayrollJobRow = ({ job }: { job: JobType }) => {
   const {
-    id: jobId,
     role,
     date,
     project,
     location,
     dresscode,
-    check_in: checkIn,
-    check_out: checkOut,
     total_hours: totalTime,
     night_hours: nightHours,
     is_holiday: isHoliday,
@@ -50,12 +47,14 @@ const PayrollJobRow = ({ job }: { job: JobType }) => {
   };
 
   const dateStyle: CSSProperties = {
-    ...(isHoliday ? { fontWeight: 'bold', color: 'var(--color-red-700)' } : {}),
+    ...(isHoliday
+      ? { fontWeight: 'bold', color: 'var(--color-holiday-font-red)' }
+      : {}),
   };
 
   return (
     <Table.Row style={style}>
-      <div style={dateStyle}>{formatDate(date)}</div>
+      <div style={dateStyle}>{formatDate(date ?? '')}</div>
       <div>{capitalizeFirstLetter(role)}</div>
       <Stacked>
         <span>{project}</span>

@@ -80,7 +80,14 @@ export interface Database {
           total_hours?: number
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "jobs_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       settings: {
         Row: {
@@ -93,7 +100,7 @@ export interface Database {
           created_at?: string | null
           id?: number
           role?: string
-          user_id?: string
+          user_id: string
         }
         Update: {
           created_at?: string | null
@@ -101,10 +108,18 @@ export interface Database {
           role?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "settings_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       wage: {
         Row: {
+          annual_wage_limit: number
           base_wage: number
           beginning_night_hours: string
           created_at: string
@@ -113,6 +128,7 @@ export interface Database {
           holidays: Json
           id: number
           insignificance_limit: number
+          monthly_repayment_rate_health_insurance: number
           night_allowance_rate: number
           overpayment_jun_suit: number
           overpayment_jun_suit_holiday: number
@@ -134,6 +150,7 @@ export interface Database {
           year: string
         }
         Insert: {
+          annual_wage_limit: number
           base_wage: number
           beginning_night_hours: string
           created_at?: string
@@ -142,6 +159,7 @@ export interface Database {
           holidays: Json
           id?: number
           insignificance_limit: number
+          monthly_repayment_rate_health_insurance: number
           night_allowance_rate: number
           overpayment_jun_suit: number
           overpayment_jun_suit_holiday: number
@@ -163,6 +181,7 @@ export interface Database {
           year: string
         }
         Update: {
+          annual_wage_limit?: number
           base_wage?: number
           beginning_night_hours?: string
           created_at?: string
@@ -171,6 +190,7 @@ export interface Database {
           holidays?: Json
           id?: number
           insignificance_limit?: number
+          monthly_repayment_rate_health_insurance?: number
           night_allowance_rate?: number
           overpayment_jun_suit?: number
           overpayment_jun_suit_holiday?: number

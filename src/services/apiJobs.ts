@@ -9,7 +9,6 @@ export const getJobs = async ({
   userId,
 }: {
   filter: {
-    // [index: string]: string;
     field: string;
     value: string;
   } | null;
@@ -78,13 +77,18 @@ export async function getJobsAfterYear(year: number, userId: string) {
   return data;
 }
 
-export const getJobsByDate = async (month: number, year: number) => {
+export const getJobsByDate = async (
+  month: number,
+  year: number,
+  userId: string
+) => {
   const startDate = new Date(year, month - 1, 1);
   const endDate = new Date(year, month, 0);
 
   const { data, error } = await supabase
     .from('jobs')
     .select('*')
+    .eq('user_id', userId)
     .gte('date', startDate.toISOString())
     .lte('date', endDate.toISOString())
     .order('date');

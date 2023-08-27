@@ -7,11 +7,14 @@ export function useRecentJobs() {
   const [searchParams] = useSearchParams();
   const { user } = useUser();
 
-  const userId = user?.id ?? '';
+  if (!user) throw new Error('No user could be found');
+  const userId = user.id;
 
+  // if no sortBy query exists take current year
   const currYear = !searchParams.get('sortBy')
     ? `date-${new Date().getFullYear().toString()}`
     : searchParams.get('sortBy');
+
   const [_, queryYear] = (currYear?.split('-') ?? []) as [
     string,
     string | undefined

@@ -32,6 +32,7 @@ export const defaultSettings: Settings = {
 
 export const defaultWage: Wage = {
   base_wage: 10.76,
+  annual_wage_limit: 11000,
   year: new Date().getFullYear().toString(),
   holiday_compensation: 9.58,
   insignificance_limit: 500.91,
@@ -54,6 +55,7 @@ export const defaultWage: Wage = {
   overpayment_sen_suit_night: 1.17,
   overpayment_sen_suit_holiday: 0.24,
   overpayment_sen_suit_night_holiday: 0.24,
+  monthly_repayment_rate_health_insurance: 14.62,
   holidays: {
     dates: [],
     fileName: '',

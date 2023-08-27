@@ -3,11 +3,13 @@ import Stats from './Stats';
 import { useRecentJobs } from './useRecentJobs';
 import Spinner from '../../ui/Spinner';
 import HoursChart from './HoursChart';
+import NumJobsChart from './NumJobsChart';
+import { useWages } from '../settings/useWages';
 
 const StyledDashboardLayout = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: auto 34rem auto;
+  grid-template-rows: auto 34rem 34rem;
   gap: 2.4rem;
 
   /* iPad Mini */
@@ -18,24 +20,22 @@ const StyledDashboardLayout = styled.div`
 `;
 
 function DashboardLayout() {
-  const { jobs, isLoading } = useRecentJobs();
+  const { jobs, isLoading: isLoading1 } = useRecentJobs();
+  const { wages, isLoading: isLoading2 } = useWages();
 
-  // if (isLoading1 || isLoading2 || isLoading3) return <Spinner />;
-  if (isLoading) return <Spinner />;
+  if (isLoading1 || isLoading2) return <Spinner />;
+
+  // extract the year from the first job object
+  const [year] = jobs?.[0]?.date?.split('-') ?? '';
+
+  // get the stored wage data for selected year
+  const currentWage = wages?.find((wage) => wage.year === year?.toString());
 
   return (
     <StyledDashboardLayout>
-      {jobs && <Stats jobs={jobs} />}
-      {/* <Stats
-        bookings={bookings}
-        confirmedStays={confirmedStays}
-        numDays={numDays}
-        cabinCount={cabins.length}
-      />
-      <TodayActivity />
-      <DurationChart confirmedStays={confirmedStays} />
-      <SalesChart bookings={bookings} numDays={numDays} /> */}
+      {jobs && currentWage && <Stats jobs={jobs} currentWage={currentWage} />}
       {jobs && <HoursChart jobs={jobs} />}
+      {jobs && <NumJobsChart jobs={jobs} />}
     </StyledDashboardLayout>
   );
 }

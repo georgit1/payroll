@@ -23,11 +23,11 @@ const StyledSalesChart = styled(DashboardBox)`
   }
 `;
 
-type EarningsChartProps = {
+type HoursChartProps = {
   jobs: Job[];
 };
 
-const HoursChart = ({ jobs }: EarningsChartProps) => {
+const HoursChart = ({ jobs }: HoursChartProps) => {
   const { isDarkMode } = useDarkMode();
 
   const months: Record<string, string> = {
@@ -46,12 +46,13 @@ const HoursChart = ({ jobs }: EarningsChartProps) => {
   };
 
   const orderedMonthKeys = Object.keys(months).sort();
-
   const dataArray = orderedMonthKeys.map((monthKey) => {
     const monthLabel = months[monthKey];
-    const monthJobs = jobs.filter((job) =>
-      job.date.startsWith(`${jobs[0]?.date.slice(0, 4)}-${monthKey}`)
-    );
+    const monthJobs = jobs.filter((job) => {
+      if (job.date) {
+        return job.date.startsWith(`${jobs[0]?.date?.slice(0, 4)}-${monthKey}`);
+      }
+    });
 
     const totalHours = monthJobs
       .reduce((sum, job) => sum + job.total_hours, 0)
@@ -62,7 +63,6 @@ const HoursChart = ({ jobs }: EarningsChartProps) => {
 
     return {
       label: monthLabel,
-      numJobs: monthJobs.length,
       totalHours,
       nightHours,
     };
@@ -72,21 +72,19 @@ const HoursChart = ({ jobs }: EarningsChartProps) => {
     ? {
         totalHours: { stroke: '#4f46e5', fill: '#4f46e5' },
         nightHours: { stroke: '#ff9800', fill: '#ff9800' }, // New color for nightHours
-        numJobs: { stroke: '#22c55e', fill: '#22c55e' },
         text: '#e5e7eb',
         background: '#18212f',
       }
     : {
         totalHours: { stroke: '#4f46e5', fill: '#c7d2fe' },
         nightHours: { stroke: '#ff9800', fill: '#ffc085' }, // New color for nightHours
-        numJobs: { stroke: '#16a34a', fill: '#dcfce7' },
         text: '#374151',
         background: '#fff',
       };
 
   return (
     <StyledSalesChart>
-      <Heading as='h2'>{`Jobs ${jobs[0]?.date.slice(0, 4)}`}</Heading>
+      <Heading as='h2'>{`Job Hours ${jobs[0]?.date?.slice(0, 4)}`}</Heading>
 
       <ResponsiveContainer height={300} width='100%'>
         <AreaChart data={dataArray}>
@@ -117,16 +115,61 @@ const HoursChart = ({ jobs }: EarningsChartProps) => {
             strokeWidth={2}
             name='Night hours'
           />
-          <Area
-            dataKey='numJobs'
-            type='monotone'
-            stroke={colors.numJobs.stroke}
-            fill={colors.numJobs.fill}
-            strokeWidth={2}
-            name='Total jobs'
-          />
         </AreaChart>
       </ResponsiveContainer>
+      {/* <ResponsiveContainer height={300} width='100%'>
+        <AreaChart data={dataArray}>
+          <XAxis
+            dataKey='label'
+            tick={{ fill: colors.text }}
+            tickLine={{ stroke: colors.text }}
+          />
+
+          <CartesianGrid strokeDasharray='4' />
+          <Tooltip contentStyle={{ backgroundColor: colors.background }} />
+
+          <Area
+            dataKey='totalHours'
+            type='monotone'
+            stroke={colors.totalHours.stroke}
+            fill={colors.totalHours.fill}
+            strokeWidth={2}
+            name='Total hours'
+          />
+
+          <YAxis
+            yAxisId='left' // Specify the yAxisId
+            tick={{ fill: colors.text }}
+            tickLine={{ stroke: colors.text }}
+          />
+          <Area
+            dataKey='nightHours'
+            type='monotone'
+            stroke={colors.nightHours.stroke}
+            fill={colors.nightHours.fill}
+            strokeWidth={2}
+            name='Night hours'
+            yAxisId='left' // Use the same yAxisId as specified above
+          />
+
+          <YAxis
+            yAxisId='right' // Specify another yAxisId
+            orientation='right' // Position the yAxis on the right side
+            tick={{ fill: colors.text }}
+            tickLine={{ stroke: colors.text }}
+          /> */}
+      {/* Add another Area using the dataKey and yAxisId */}
+      {/* <Area
+      dataKey='anotherDataKey'
+      type='monotone'
+      stroke={colors.anotherData.stroke}
+      fill={colors.anotherData.fill}
+      strokeWidth={2}
+      name='Another Data'
+      yAxisId='right' // Use the same yAxisId as specified above
+    /> */}
+      {/* </AreaChart>
+      </ResponsiveContainer> */}
     </StyledSalesChart>
   );
 };

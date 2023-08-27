@@ -65,7 +65,9 @@ const JobRow = ({ job }: { job: JobType }) => {
   };
 
   const dateStyle: CSSProperties = {
-    ...(isHoliday ? { fontWeight: 'bold', color: 'var(--color-red-700)' } : {}),
+    ...(isHoliday
+      ? { fontWeight: 'bold', color: 'var(--color-holiday-red)' }
+      : {}),
   };
 
   return (

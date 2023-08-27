@@ -12,6 +12,7 @@ const CommonRow = styled.div`
 
 const StyledRow = styled(CommonRow)`
   padding: 1.2rem 2.4rem;
+  color: var(--color-holiday-font-red);
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-grey-100);

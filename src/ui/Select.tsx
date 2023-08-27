@@ -1,3 +1,4 @@
+import { defaultContext } from '@tanstack/react-query';
 import { ForwardedRef, forwardRef } from 'react';
 import styled from 'styled-components';
 
@@ -62,14 +63,17 @@ const Select = forwardRef(
       <StyledSelect
         ref={ref}
         id={id}
-        defaultValue={defaultValue}
         disabled={disabled}
         onBlur={onBlur}
         onChange={onChange}
         {...props}
       >
         {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
+          <option
+            key={opt.value}
+            value={opt.value}
+            selected={opt.value === defaultValue}
+          >
             {opt.label}
           </option>
         ))}

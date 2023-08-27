@@ -69,7 +69,7 @@ const StyledNavLink = styled(NavLink)<StyledNavLinkProps>`
     transform: translate(0, -50%);
     width: 0.6rem;
     height: 0.6rem;
-    background-color: var(--color-red-700);
+    background-color: var(--color-holiday-font-red);
     border-radius: 50%;
   }
 `;

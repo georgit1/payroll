@@ -1,7 +1,11 @@
 import React, { ReactNode } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-const StyledFormRow = styled.div`
+type StyledFormRowProps = {
+  applyMediaQuery?: boolean;
+};
+
+const StyledFormRow = styled.div<StyledFormRowProps>`
   display: grid;
   align-items: center;
   grid-template-columns: 24rem 1fr 1.2fr;
@@ -26,6 +30,19 @@ const StyledFormRow = styled.div`
     justify-content: flex-end;
     gap: 1.2rem;
   }
+
+  /* for iPadMini */
+  @media (max-width: 1024px) {
+    grid-template-columns: 15rem 30rem 1fr;
+  }
+
+  ${(props) =>
+    props.applyMediaQuery &&
+    css`
+      @media (max-width: 1024px) {
+        display: none;
+      }
+    `}
 `;
 
 const Label = styled.label`
@@ -44,22 +61,29 @@ const Label = styled.label`
 
 const Error = styled.span`
   font-size: 1.4rem;
-  color: var(--color-red-700);
+  color: var(--color-holiday-font-red);
 `;
 
 type FormRowProps = {
   label?: string;
   labelIcon?: ReactNode;
   error?: string;
+  applyMediaQuery?: boolean;
   children: React.ReactElement | React.ReactElement[];
 };
 
-const FormRow = ({ label, labelIcon, error, children }: FormRowProps) => {
+const FormRow = ({
+  label,
+  labelIcon,
+  error,
+  applyMediaQuery = false,
+  children,
+}: FormRowProps) => {
   // check if one or more children
   const childElements = Array.isArray(children) ? children : [children];
 
   return (
-    <StyledFormRow>
+    <StyledFormRow applyMediaQuery={applyMediaQuery}>
       {label && (
         <Label htmlFor={childElements[0]?.props?.id}>
           {label} {labelIcon}

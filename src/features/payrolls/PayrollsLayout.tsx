@@ -58,7 +58,6 @@ const PayrollsLayout = () => {
           throw new Error('No wage data available');
         const { salary } = calculateSalary(salaryOptions, currentWage);
 
-        // //////////////////////////////////////////////////
         return (
           <Payroll
             key={key}

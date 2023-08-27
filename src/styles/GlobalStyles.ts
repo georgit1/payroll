@@ -32,13 +32,21 @@ const GlobalStyles = createGlobalStyle`
   --color-red-800: #991b1b;
 
   /* Calendar */
-  --color-holiday-red: #ffbdb9;
+  --color-holiday-red: #FCA5A5;
+  --color-holiday-font-red: #991b1b;
   --color-text-holiday-red: #4b5563;
   --color-currentDay:#1967D2;
   --color-text-currentDay:  #f0f0f0;
   
   /* Calculation table */
   --color-result-row: #E5E7EB;
+
+  /* info field */
+  --color-info-red:#FBB6B6;
+  --color-info-radius-red:#F06363;
+  --color-info-green:#C7F6D8;
+  --color-info-radius-green:#70C682;
+
   
   --backdrop-color: rgba(255, 255, 255, 0.1);
 
@@ -80,13 +88,20 @@ const GlobalStyles = createGlobalStyle`
 --color-red-800: #991b1b;
 
 /* Calendar */
---color-holiday-red: #ff8072;
+--color-holiday-red: #FFA500;
+--color-holiday-font-red: #FFA500;
 --color-text-holiday-red: #111827;
 --color-currentDay:#0C3C70;
 --color-text-currentDay:  #f0f0f0;
 
 /* Calculation table */
 --color-result-row: #203c68;
+
+ /* info field */
+ --color-info-red:#4D1414;
+ --color-info-radius-red:#2A0A0A;
+  --color-info-green:#1E392A;
+  --color-info-radius-green:#0D1E16;
 
 --backdrop-color: rgba(0, 0, 0, 0.3);
 

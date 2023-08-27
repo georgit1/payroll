@@ -10,6 +10,7 @@ export const useJobs = (enablePagination: boolean = false) => {
   const [searchParams] = useSearchParams();
 
   const userId = user?.id;
+  if (!userId) throw new Error('user not found');
 
   // FILTER
   const filterValue = searchParams.get('dresscode');
@@ -38,7 +39,13 @@ export const useJobs = (enablePagination: boolean = false) => {
     error,
   } = useQuery({
     queryKey: ['jobs', filter, sortBy, page],
-    queryFn: () => getJobs({ filter, sortBy, page, userId: userId ?? '' }),
+    queryFn: () => {
+      // NOTE experimental
+      if (!userId) {
+        return Promise.resolve({ data: [], count: 0 });
+      }
+      return getJobs({ filter, sortBy, page, userId: userId });
+    },
   });
 
   // PRE-FETCHING
@@ -48,7 +55,7 @@ export const useJobs = (enablePagination: boolean = false) => {
     queryClient.prefetchQuery({
       queryKey: ['jobs', filter, sortBy, page + 1],
       queryFn: () =>
-        getJobs({ filter, sortBy, page: page + 1, userId: userId ?? '' }),
+        getJobs({ filter, sortBy, page: page + 1, userId: userId }),
     });
   }
 
@@ -56,7 +63,7 @@ export const useJobs = (enablePagination: boolean = false) => {
     queryClient.prefetchQuery({
       queryKey: ['jobs', sortBy, page - 1],
       queryFn: () =>
-        getJobs({ filter, sortBy, page: page - 1, userId: userId ?? '' }),
+        getJobs({ filter, sortBy, page: page - 1, userId: userId }),
     });
   }
 

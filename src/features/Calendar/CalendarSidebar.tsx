@@ -12,6 +12,11 @@ const StyledSidebar = styled.aside`
   border: 1px solid var(--color-grey-200);
   padding: 1.25rem;
   gap: 2.5rem;
+
+  /* iPad Mini */
+  @media (max-width: 1024px) {
+    display: none;
+  }
 `;
 
 type CalendarSidebarProps = {

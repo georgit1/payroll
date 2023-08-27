@@ -15,7 +15,7 @@ import { Combination, HolidayData, Job } from '../types';
 export const legendColors = [
   { color: 'var(--color-grey-50', label: 'vest' },
   { color: 'var(--color-blue-700)', label: 'suit' },
-  { color: 'var(--color-red-700)', label: 'holiday' },
+  { color: 'var(--color-holiday-font-red)', label: 'holiday' },
 ];
 
 export const calendarLegendColors = [

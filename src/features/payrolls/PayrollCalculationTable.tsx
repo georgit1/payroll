@@ -9,6 +9,7 @@ import { combinations } from '../../utils/helpers';
 import { Wage } from '../../types';
 import HolidayCalculationBlock from './HolidayCalculationBlock';
 import GeneralCalculationBlock from './GeneralCalculationBlock';
+import { useEffect } from 'react';
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -16,7 +17,10 @@ const StyledTable = styled.div`
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
-  overflow: hidden;
+
+  @media (max-width: 1024px) {
+    margin-top: 2rem;
+  }
 `;
 
 const CommonRow = styled.div`
@@ -59,9 +63,14 @@ const StyledBody = styled.section`
 type PayrollJobTableProps = {
   jobs: JobType[];
   wage: Wage;
+  onGetSalary: (value: number) => void;
 };
 
-const PayrollCalculationTable = ({ jobs, wage }: PayrollJobTableProps) => {
+const PayrollCalculationTable = ({
+  jobs,
+  wage,
+  onGetSalary,
+}: PayrollJobTableProps) => {
   const { night_allowance_rate: nightAllowanceRate } = wage;
 
   // prepare object totalHours for all combinations like jun/sen, day/night,...
@@ -75,6 +84,11 @@ const PayrollCalculationTable = ({ jobs, wage }: PayrollJobTableProps) => {
     totalHoursNight,
     amountNightAllowance,
   } = calculateSalary(salaryOptions, wage);
+
+  // pass salary to parent component
+  useEffect(() => {
+    onGetSalary(salary);
+  }, [salary]);
 
   // general data
   const junVestData = extractWageData(wage, salaryOptions, 'jun', 'vest');

@@ -57,7 +57,7 @@ const UpdateUserDataForm = () => {
         />
       </FormRow>
 
-      <FormRow label='Avatar image'>
+      <FormRow label='Avatar image' applyMediaQuery={true}>
         <FileInput
           id='avatar'
           accept='image/*'

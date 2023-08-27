@@ -21,7 +21,7 @@ import { toast } from 'react-hot-toast';
 
 const Error = styled.span`
   font-size: 1.4rem;
-  color: var(--color-red-700);
+  color: var(--color-holiday-font-red);
 `;
 
 const Info = styled.span`
@@ -78,7 +78,7 @@ const UpdateSettingsForm = () => {
     useUpdateWage(selectedYear);
 
   // const { isLoading: isLoading2, wage } = useWage(selectedYear);
-  const { isLoading: isLoading2, wages, refetch: refetchWage } = useWages();
+  const { isLoading: isLoading2, wages } = useWages();
   const { addWage, isAdding } = useAddWage();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -137,24 +137,12 @@ const UpdateSettingsForm = () => {
       return;
 
     updateSetting({ [field]: value });
-
-    // If the field is 'holidays', parse the CSV data to extract dates before updating
-    // if (field === 'holidays') {
-    //   if (e.target instanceof HTMLInputElement) {
-    //     const selectedFile = e.target.files?.[0];
-    //     if (selectedFile) {
-    //       const dates = await extractDataFromCsv(selectedFile);
-    //       updateSetting({ [field]: dates });
-    //     }
-    //   }
-    // } else {
-    //   updateSetting({ [field]: value });
-    // }
   }
 
   const handleAddYear = () => {
     setYearError('');
 
+    if (isAdding) return;
     if (!newYear) return;
 
     if (newYear.length !== 4) {
@@ -236,11 +224,9 @@ const UpdateSettingsForm = () => {
 
       <FormRow label='Year'>
         <Select
-          key={selectedYear}
           id='year'
           options={selectOptYear || []}
-          // defaultValue={selectedYear}
-          defaultValue={currentWage?.year}
+          defaultValue={selectedYear}
           disabled={isUpdating}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
             setSelectedYear(e.target.value);
@@ -256,6 +242,30 @@ const UpdateSettingsForm = () => {
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
             handleUpdateWage(e, 'base_wage')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Annula Wage Limit'>
+        <Input
+          type='number'
+          id='annual-wage-limit'
+          defaultValue={currentWage?.annual_wage_limit}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'annual_wage_limit')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Insignificance Limit'>
+        <Input
+          type='number'
+          id='insignificance-limit'
+          defaultValue={currentWage?.insignificance_limit}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'insignificance_limit')
           }
         />
       </FormRow>
@@ -460,6 +470,18 @@ const UpdateSettingsForm = () => {
           disabled={isUpdating}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
             handleUpdateWage(e, 'holiday_compensation')
+          }
+        />
+      </FormRow>
+
+      <FormRow label='Monthly Repayment Rate Health Insurance (%)'>
+        <Input
+          type='number'
+          id='monthly-repayment-rate-health-insurance'
+          defaultValue={currentWage?.monthly_repayment_rate_health_insurance}
+          disabled={isUpdating}
+          onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+            handleUpdateWage(e, 'monthly_repayment_rate_health_insurance')
           }
         />
       </FormRow>

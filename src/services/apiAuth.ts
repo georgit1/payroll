@@ -20,6 +20,7 @@ export const signup = async ({ fullName, email, password }: SignUpProps) => {
   });
 
   if (error) throw new Error(error.message);
+  if (!data.user) throw new Error('error on getting user data');
 
   // Insert default settings into the "settings" table
   const { error: settingsError } = await supabase
@@ -112,4 +113,17 @@ export const updateCurrentUser = async ({
 
   if (error2) throw new Error(error2.message);
   return updatedUser;
+};
+
+export const deleteCurrentUser = async ({ userId }: { userId: string }) => {
+  // delete user
+  // no user related table data must be deleted because they have foreign key relation -> on delete: Cascade
+  const { data: deleteUserResponse, error: deleteUserError } =
+    await supabase.auth.admin.deleteUser(userId);
+
+  if (deleteUserError) {
+    throw new Error(deleteUserError.message);
+  }
+
+  return deleteUserResponse;
 };
