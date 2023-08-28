@@ -21,8 +21,8 @@ import { JobType } from '../../types/collection';
 
 const JobRow = ({ job }: { job: JobType }) => {
   const { user } = useUser();
-  const { isDeleting, deleteJob } = useDeleteJob();
-  const { addJob } = useAddJob();
+  const { deleteJob, isDeleting } = useDeleteJob();
+  const { addJob, isAdding } = useAddJob();
 
   const userId = user?.id;
 
@@ -91,7 +91,11 @@ const JobRow = ({ job }: { job: JobType }) => {
             <Menus.Toggle id={jobId} />
 
             <Menus.List id={jobId}>
-              <Menus.Button icon={<HiSquare2Stack />} onClick={handleDuplicate}>
+              <Menus.Button
+                icon={<HiSquare2Stack />}
+                onClick={handleDuplicate}
+                disabled={isAdding}
+              >
                 Duplicate
               </Menus.Button>
 
