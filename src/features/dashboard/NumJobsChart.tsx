@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import DashboardBox from './DashboardBox';
-import Heading from '../../ui/Heading';
 import {
   Area,
   AreaChart,
@@ -10,7 +8,15 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+
+// Components
+import DashboardBox from './DashboardBox';
+import Heading from '../../ui/Heading';
+
+// Context
 import { useDarkMode } from '../../context/DarkModeContext';
+
+// Types
 import { Job } from '../../types';
 
 const StyledNumJobsChart = styled(DashboardBox)`

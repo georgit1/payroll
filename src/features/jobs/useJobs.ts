@@ -1,8 +1,14 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getJobs } from '../../services/apiJobs';
 import { useSearchParams } from 'react-router-dom';
+
+// Constants
 import { PAGE_SIZE } from '../../utils/constants';
+
+// Hooks
 import { useUser } from '../authentication/useUser';
+
+// Services
+import { getJobs } from '../../services/apiJobs';
 
 export const useJobs = (enablePagination: boolean = false) => {
   const queryClient = useQueryClient();
@@ -25,7 +31,6 @@ export const useJobs = (enablePagination: boolean = false) => {
   const sortBy = { field, direction };
 
   // PAGINATION
-  // const page = !searchParams.get('page') ? 1 : Number(searchParams.get('page'));
   const page = enablePagination
     ? !searchParams.get('page')
       ? 1

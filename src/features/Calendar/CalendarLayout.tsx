@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-import { getMonth } from '../../utils/helpers';
+
+// Components
 import Month from './Month';
-import { useCalendar } from '../../context/CalenderContext';
 import Sidebar from './CalendarSidebar';
+
+// Hooks
+import { useCalendar } from '../../context/CalenderContext';
 import { useJobs } from '../jobs/useJobs';
 import { useWages } from '../settings/useWages';
+
+// Helpers
+import { getMonth } from '../../utils/helpers';
 
 const StyledCalendar = styled.div`
   display: grid;

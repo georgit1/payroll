@@ -1,7 +1,11 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import Day from './Day';
 import { format } from 'date-fns';
+
+// Components
+import Day from './Day';
+
+// Types
 import { JobType, WageType } from '../../types/collection';
 
 const StyledMonth = styled.div`
@@ -22,6 +26,7 @@ const Month = ({ month, jobs, wages }: MonthProps) => {
   return (
     <StyledMonth>
       {month.map((row, i) => (
+        // create day for each month data
         <React.Fragment key={i}>
           {row.map((day, idx) => {
             const formattedDay = format(day, 'yyyy-MM-dd');

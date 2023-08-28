@@ -1,25 +1,32 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import { styled } from 'styled-components';
 
+// Components
 import Input from '../../ui/Input';
 import Form from '../../ui/Form';
 import Button from '../../ui/Button';
 import Textarea from '../../ui/Textarea';
 import FormRow from '../../ui/FormRow';
 import Select from '../../ui/Select';
+import Checkbox from '../../ui/Checkbox';
 
-import { HolidayData, Job } from '../../types';
-import { JobType, WageType } from '../../types/collection';
+
+// Hooks
 import { useAddJob } from './useAddJob';
 import { useEditJob } from './useEditJob';
-import { calculateHours, capitalizeFirstLetter } from '../../utils/helpers';
 import { useSettings } from '../settings/useSettings';
-import Checkbox from '../../ui/Checkbox';
-import { styled } from 'styled-components';
-import { useState } from 'react';
 import { useUser } from '../authentication/useUser';
 import { useJobs } from './useJobs';
-import { toast } from 'react-hot-toast';
 import { useWages } from '../settings/useWages';
+
+// Helpers
+import { calculateHours, capitalizeFirstLetter } from '../../utils/helpers';
+
+// Types
+import { HolidayData, Job } from '../../types';
+import { JobType, WageType } from '../../types/collection';
 
 const Box = styled.div`
   background-color: var(--color-grey-50);
@@ -195,7 +202,6 @@ const CreateJobForm = ({
           type='date'
           id='date'
           disabled={isWorking}
-          // disabled={isEditSession || isWorking}
           {...register('date', {
             required: 'This field is required',
           })}

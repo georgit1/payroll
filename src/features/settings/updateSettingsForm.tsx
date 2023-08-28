@@ -1,23 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
-import { SettingsType, WageType } from '../../types/collection';
-import FileInput from '../../ui/FileInput';
+import { styled } from 'styled-components';
+import { toast } from 'react-hot-toast';
+import { HiOutlineInformationCircle } from 'react-icons/hi2';
+
+// Components
 import Form from '../../ui/Form';
-import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
+import Modal from '../../ui/Modal';
 import Select from '../../ui/Select';
 import Spinner from '../../ui/Spinner';
+import FormRow from '../../ui/FormRow';
+import FileInput from '../../ui/FileInput';
+import HolidayInfo from './HolidayInfo';
+
+// Hooks
+import { useWages } from './useWages';
+import { useAddWage } from './useAddWage';
+import { useUpdateWage } from './useUpdateWage';
 import { useSettings } from './useSettings';
 import { useUpdateSetting } from './useUpdateSetting';
+
+// Helpers
 import { extractDataFromCsv } from '../../utils/helpers';
-import { styled } from 'styled-components';
-import Modal from '../../ui/Modal';
-import { HiOutlineInformationCircle } from 'react-icons/hi2';
-import HolidayInfo from './HolidayInfo';
-import { useWages } from './useWages';
-import { useUpdateWage } from './useUpdateWage';
-import { useAddWage } from './useAddWage';
+
+// Data
 import { defaultWage } from '../../data/data-defaultValues';
-import { toast } from 'react-hot-toast';
+
+// Types
+import { SettingsType, WageType } from '../../types/collection';
 
 const Error = styled.span`
   font-size: 1.4rem;
@@ -77,12 +87,10 @@ const UpdateSettingsForm = () => {
   const { isUpdating: isUpdatingWage, updateWage } =
     useUpdateWage(selectedYear);
 
-  // const { isLoading: isLoading2, wage } = useWage(selectedYear);
   const { isLoading: isLoading2, wages } = useWages();
   const { addWage, isAdding } = useAddWage();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  // const yearInputRef = useRef<HTMLInputElement>(null);
 
   const currentWage = wages?.find((wage) => wage.year === selectedYear);
   const yearsCollection = wages?.map((item) => item.year);

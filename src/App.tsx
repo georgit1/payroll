@@ -3,19 +3,24 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
 
-import Dashboard from './pages/Dashboard';
-import GlobalStyles from './styles/GlobalStyles';
-import PageNotFound from './pages/PageNotFound';
+// Pages
 import Login from './pages/Login';
+import Account from './pages/Account';
 import AppLayout from './ui/AppLayout';
 import Jobs from './pages/Jobs';
+import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import Payrolls from './pages/Payrolls';
 import Payroll from './pages/Payroll';
-import ProtectedRoute from './ui/ProtectedRoute';
-import Account from './pages/Account';
-import { DarkModeProvider } from './context/DarkModeContext';
 import Calendar from './pages/Calendar';
+import ProtectedRoute from './ui/ProtectedRoute';
+import PageNotFound from './pages/PageNotFound';
+
+// Styles
+import GlobalStyles from './styles/GlobalStyles';
+
+// Constext Provider
+import { DarkModeProvider } from './context/DarkModeContext';
 import { CalendarProvider } from './context/CalenderContext';
 
 const queryClient = new QueryClient({

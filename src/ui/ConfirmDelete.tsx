@@ -1,6 +1,10 @@
 import styled from 'styled-components';
+
+// Components
 import Button from './Button';
 import Heading from './Heading';
+
+// Helpers
 import { capitalizeFirstLetter } from '../utils/helpers';
 
 const StyledConfirmDelete = styled.div`

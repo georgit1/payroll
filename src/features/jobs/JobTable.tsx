@@ -1,12 +1,16 @@
+// Components
+import Menus from '../../ui/Menus';
 import Spinner from '../../ui/Spinner';
 import JobRow from './JobRow';
-
-import { useJobs } from './useJobs';
-import Table from '../../ui/Table';
-import { JobType } from '../../types/collection';
-import Menus from '../../ui/Menus';
-import Empty from '../../ui/Empty';
 import Pagination from '../../ui/Pagination';
+import Table from '../../ui/Table';
+import Empty from '../../ui/Empty';
+
+// Hooks
+import { useJobs } from './useJobs';
+
+// Types
+import { JobType } from '../../types/collection';
 
 const JobTable = () => {
   const { isLoading, jobs, count } = useJobs(true);

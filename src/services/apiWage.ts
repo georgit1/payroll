@@ -1,19 +1,13 @@
-import { Wage } from '../types';
 import supabase from './supabase';
 
-export const getWage = async ({
-  userId,
-}: // year,
-{
-  userId: string;
-  // year: string;
-}) => {
+// Types
+import { Wage } from '../types';
+
+export const getWage = async ({ userId }: { userId: string }) => {
   const { data, error } = await supabase
     .from('wage')
     .select('*')
     .eq('user_id', userId);
-  // .eq('year', year)
-  // .single();
 
   if (error) {
     console.log(error);
@@ -23,7 +17,7 @@ export const getWage = async ({
   return data;
 };
 
-export const addWage = async (newWage: Wage) => {
+export const addWage = async (newWage: Wage & { user_id: string }) => {
   const { data, error } = await supabase
     .from('wage')
     .insert([newWage])

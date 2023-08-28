@@ -1,8 +1,12 @@
 import { format, getMonth } from 'date-fns';
 import { styled } from 'styled-components';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import { useCalendar } from '../../context/CalenderContext';
+
+// Components
 import Button from '../../ui/Button';
+
+// Hooks
+import { useCalendar } from '../../context/CalenderContext';
 
 const Header = styled.header`
   display: flex;
@@ -37,12 +41,17 @@ const CalendarHeader = () => {
   const { monthIndex, setMonthIndex } = useCalendar();
   const currentYear = new Date().getFullYear();
 
+  // switch to prev month
   const handlePrevMonth = () => {
     setMonthIndex(monthIndex - 1);
   };
+
+  // switch to next month
   const handleNextMonth = () => {
     setMonthIndex(monthIndex + 1);
   };
+
+  // switch to today
   const handleReset = () => {
     setMonthIndex(
       monthIndex === getMonth(new Date())

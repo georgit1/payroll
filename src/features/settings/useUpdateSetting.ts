@@ -1,7 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
-import { updateSetting as updateSettingApi } from '../../services/apiSettings';
+
+// Hooks
 import { useUser } from '../authentication/useUser';
+
+// Services
+import { updateSetting as updateSettingApi } from '../../services/apiSettings';
+
+// Types
 import { SettingsType } from '../../types/collection';
 
 export const useUpdateSetting = () => {

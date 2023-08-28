@@ -1,5 +1,9 @@
 import supabase from './supabase';
+
+// Constants
 import { PAGE_SIZE } from '../utils/constants';
+
+// Types
 import { Job } from '../types';
 
 export const getJobs = async ({

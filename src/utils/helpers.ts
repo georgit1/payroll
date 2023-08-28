@@ -1,3 +1,4 @@
+import Papa from 'papaparse';
 import {
   parse,
   addDays,
@@ -9,7 +10,8 @@ import {
   format,
   endOfMonth,
 } from 'date-fns';
-import Papa from 'papaparse';
+
+// Types
 import { Combination, HolidayData, Job } from '../types';
 
 export const legendColors = [
@@ -93,6 +95,7 @@ export const getHoursByDresscodeAndRole = (
   return hours.toFixed(2);
 };
 
+// calculate total hours and night hours for given timespan
 export const calculateHours = (
   start: string,
   end: string,
@@ -238,7 +241,6 @@ export const removeTrailingZeros = (num: number): string => {
   return trimmedNum;
 };
 
-// Helper function to capitalize a string
 export const capitalize = (s: string) => {
   return s.charAt(0).toUpperCase() + s.slice(1);
 };

@@ -1,11 +1,15 @@
+import supabase, { supabaseUrl } from './supabase';
+
+// Data
 import { defaultSettings, defaultWage } from '../data/data-defaultValues';
+
+// Types
 import {
   LoginProps,
   SignUpProps,
   UpdateUserProps,
   UserAttributes,
 } from '../types';
-import supabase, { supabaseUrl } from './supabase';
 
 export const signup = async ({ fullName, email, password }: SignUpProps) => {
   const { data, error } = await supabase.auth.signUp({

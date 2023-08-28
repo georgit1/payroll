@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteJob as deleteJobApi } from '../../services/apiJobs';
 import { toast } from 'react-hot-toast';
+
+// Services
+import { deleteJob as deleteJobApi } from '../../services/apiJobs';
 
 export const useDeleteJob = () => {
   const queryClient = useQueryClient();

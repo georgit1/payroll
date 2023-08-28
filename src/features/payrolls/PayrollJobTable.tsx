@@ -1,6 +1,9 @@
+// Components
 import Table from '../../ui/Table';
-import { JobType } from '../../types/collection';
 import PayrollJobRow from './PayrollJobRow';
+
+// Types
+import { JobType } from '../../types/collection';
 
 type PayrollJobTableProps = {
   jobs: JobType[];

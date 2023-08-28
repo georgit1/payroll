@@ -1,5 +1,7 @@
 import { ReactNode } from 'react';
 import styled from 'styled-components';
+
+// Helpers
 import { removeTrailingZeros } from '../../utils/helpers';
 
 const StyledStat = styled.div`
@@ -29,7 +31,6 @@ const Icon = styled.div`
   align-items: center;
   justify-content: center;
 
-  /* Make these dynamic, based on the received prop */
   background-color: var(--color-${(props) => props.color}-100);
 
   & svg {

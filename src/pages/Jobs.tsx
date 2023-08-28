@@ -1,11 +1,16 @@
-import JobTable from '../features/jobs/JobTable';
-import Heading from '../ui/Heading';
+// Components
 import Row from '../ui/Row';
 import AddJob from '../features/jobs/AddJob';
-import JobsTableOperations from '../features/jobs/JobsTableOperations';
+import Heading from '../ui/Heading';
+import JobTable from '../features/jobs/JobTable';
 import TableLegend from '../ui/TableLegend';
-import { legendColors } from '../utils/helpers';
+import JobsTableOperations from '../features/jobs/JobsTableOperations';
+
+// Hooks
 import { useJobs } from '../features/jobs/useJobs';
+
+// Helpers
+import { legendColors } from '../utils/helpers';
 
 const JobsOverview = () => {
   const { jobs } = useJobs();

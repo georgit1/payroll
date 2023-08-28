@@ -1,10 +1,10 @@
+import { useCallback, useState } from 'react';
 import styled from 'styled-components';
-// import LoginForm from "../features/authentication/LoginForm";
-// import Logo from "../ui/Logo";
+
+// Components
 import Heading from '../ui/Heading';
 import LoginForm from '../features/authentication/LoginForm';
 import Logo from '../ui/Logo';
-import { useCallback, useState } from 'react';
 import SignupForm from '../features/authentication/SignUpForm';
 
 type LoginLayoutProps = {

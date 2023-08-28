@@ -1,7 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
-import { getJobsAfterYear } from '../../services/apiJobs';
+
+// Hooks
 import { useUser } from '../authentication/useUser';
+
+// Services
+import { getJobsAfterYear } from '../../services/apiJobs';
 
 export function useRecentJobs() {
   const [searchParams] = useSearchParams();

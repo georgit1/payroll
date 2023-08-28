@@ -1,17 +1,23 @@
+import { CSSProperties } from 'react';
 import { HiPencil, HiSquare2Stack, HiTrash } from 'react-icons/hi2';
 
+// Components
 import CreateJobForm from './CreateJobForm';
-
-import { JobType } from '../../types/collection';
-import { useDeleteJob } from './useDeleteJob';
-import { useAddJob } from './useAddJob';
 import Modal from '../../ui/Modal';
-import ConfirmDelete from '../../ui/ConfirmDelete';
-import Table from '../../ui/Table';
 import Menus from '../../ui/Menus';
-import { formatDate, removeTrailingZeros } from '../../utils/helpers';
-import { CSSProperties } from 'react';
+import Table from '../../ui/Table';
+import ConfirmDelete from '../../ui/ConfirmDelete';
+
+// Hooks
 import { useUser } from '../authentication/useUser';
+import { useAddJob } from './useAddJob';
+import { useDeleteJob } from './useDeleteJob';
+
+// Helpers
+import { formatDate, removeTrailingZeros } from '../../utils/helpers';
+
+// Types
+import { JobType } from '../../types/collection';
 
 const JobRow = ({ job }: { job: JobType }) => {
   const { user } = useUser();
@@ -71,7 +77,6 @@ const JobRow = ({ job }: { job: JobType }) => {
   };
 
   return (
-    // <Table.Row style={dresscode === 'suit' ? style : undefined}>
     <Table.Row style={style}>
       <div style={dateStyle}>{date ? formatDate(date) : '[no date]'}</div>
       <div>{project}</div>

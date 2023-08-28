@@ -1,4 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
+
+// Conponents
 import Select from './Select';
 
 type SortByProps = {

@@ -1,6 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { getSettings } from '../../services/apiSettings';
+
+// Hooks
 import { useUser } from '../authentication/useUser';
+
+// Services
+import { getSettings } from '../../services/apiSettings';
 
 export const useSettings = () => {
   const { user } = useUser();

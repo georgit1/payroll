@@ -7,7 +7,11 @@ import {
   HiCalendarDays,
 } from 'react-icons/hi2';
 import { LuEuro } from 'react-icons/lu';
+
+// Hooks
 import { useWages } from '../features/settings/useWages';
+
+// Types
 import { WageType } from '../types/collection';
 import { HolidayData } from '../types';
 

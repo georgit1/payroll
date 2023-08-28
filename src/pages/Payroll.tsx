@@ -1,3 +1,4 @@
+// Components
 import PayrollDetail from '../features/payrolls/PayrollDetail';
 
 const Payroll = () => {

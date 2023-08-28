@@ -1,10 +1,16 @@
-import { format, startOfMonth } from 'date-fns';
 import React, { useEffect, useState } from 'react';
-import { getMonth, isDayHoliday } from '../../utils/helpers';
+import { format, startOfMonth } from 'date-fns';
 import { styled } from 'styled-components';
-import { useCalendar } from '../../context/CalenderContext';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { getMonth, isDayHoliday } from '../../utils/helpers';
+
+// Hooks
 import { useJobs } from '../jobs/useJobs';
+
+// Context
+import { useCalendar } from '../../context/CalenderContext';
+
+// Types
 import { HolidayData, Job } from '../../types';
 import { WageType } from '../../types/collection';
 

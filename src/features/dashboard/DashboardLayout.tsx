@@ -1,10 +1,14 @@
 import styled from 'styled-components';
+
+// Components
 import Stats from './Stats';
-import { useRecentJobs } from './useRecentJobs';
 import Spinner from '../../ui/Spinner';
 import HoursChart from './HoursChart';
 import NumJobsChart from './NumJobsChart';
+
+// Hooks
 import { useWages } from '../settings/useWages';
+import { useRecentJobs } from './useRecentJobs';
 
 const StyledDashboardLayout = styled.div`
   display: grid;

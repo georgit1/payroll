@@ -1,13 +1,23 @@
 import { format } from 'date-fns';
 import { styled } from 'styled-components';
-import { useCalendar } from '../../context/CalenderContext';
-import InsertJob from './InsertJob';
-import { HolidayData } from '../../types';
 import { HiTrash } from 'react-icons/hi2';
+
+// Components
+import InsertJob from './InsertJob';
 import Modal from '../../ui/Modal';
-import { useDeleteJob } from '../jobs/useDeleteJob';
 import ConfirmDelete from '../../ui/ConfirmDelete';
+
+// Hooks
+import { useDeleteJob } from '../jobs/useDeleteJob';
+
+// Context
+import { useCalendar } from '../../context/CalenderContext';
+
+// Helpers
 import { isDayHoliday } from '../../utils/helpers';
+
+// Types
+import { HolidayData } from '../../types';
 import { JobType, WageType } from '../../types/collection';
 
 type StyledDayProps = {

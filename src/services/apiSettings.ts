@@ -15,7 +15,6 @@ export const getSettings = async ({ userId }: { userId: string }) => {
   return data;
 };
 
-// export const updateSetting = async (newSettings: Partial<SettingsType>) => {
 export const updateSetting = async ({
   userId,
   ...newSettings

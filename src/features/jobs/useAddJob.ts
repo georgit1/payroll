@@ -1,6 +1,10 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { addEditJob } from '../../services/apiJobs';
 import { toast } from 'react-hot-toast';
+
+// Hooks
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+// Services
+import { addEditJob } from '../../services/apiJobs';
 
 export const useAddJob = () => {
   const queryClient = useQueryClient();

@@ -1,4 +1,6 @@
 import { styled } from 'styled-components';
+
+// Components
 import HeaderMenu from './HeaderMenu';
 import UserAvatar from '../features/authentication/UserAvatar';
 

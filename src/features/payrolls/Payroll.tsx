@@ -1,13 +1,15 @@
+import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import {
   HiOutlineBanknotes,
   HiOutlineClock,
   HiOutlineTruck,
 } from 'react-icons/hi2';
-import PayrollStat from './PayrollStat';
-import ProgressBar from '../../ui/ProgessBar';
+
+// Components
 import Button from '../../ui/Button';
-import { useNavigate } from 'react-router-dom';
+import ProgressBar from '../../ui/ProgessBar';
+import PayrollStat from './PayrollStat';
 
 const StyledPayroll = styled.div`
   display: grid;

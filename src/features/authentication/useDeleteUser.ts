@@ -1,7 +1,11 @@
-import { useMutation } from '@tanstack/react-query';
-import { useUser } from './useUser';
-import { deleteCurrentUser } from '../../services/apiAuth';
 import { toast } from 'react-hot-toast';
+import { useMutation } from '@tanstack/react-query';
+
+// Hooks
+import { useUser } from './useUser';
+
+// Services
+import { deleteCurrentUser } from '../../services/apiAuth';
 
 export const useDeleteUser = () => {
   const { user } = useUser();

@@ -1,5 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+
+// Hooks
 import { useUser } from '../authentication/useUser';
+
+// Services
 import { getWage } from '../../services/apiWage';
 
 export const useWages = () => {

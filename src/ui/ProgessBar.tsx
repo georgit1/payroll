@@ -28,8 +28,6 @@ type ProgessBarProps = {
 };
 
 const ProgressBar = ({ max, value }: ProgessBarProps) => {
-  // const calc = (value / max) * 100;
-  // const percentage = calc < 100 ? calc : 100;
   const percentage = (value / max) * 100;
 
   return (

@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 
-import { useNavigateBack } from '../hooks/useNavigateBack';
+// Components
 import Heading from '../ui/Heading';
 
-// type StyledPageNotFound = {
-
-// }
+// Hooks
+import { useNavigateBack } from '../hooks/useNavigateBack';
 
 const StyledPageNotFound = styled.main`
   height: 100vh;

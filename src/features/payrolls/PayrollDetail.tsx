@@ -1,19 +1,25 @@
-import { useParams } from 'react-router-dom';
-import { useMoveBack } from '../../hooks/useMoveBack';
-import ButtonText from '../../ui/ButtonText';
-import Heading from '../../ui/Heading';
-import Row from '../../ui/Row';
-import PayrollJobTable from './PayrollJobTable';
-import { useJobsByDate } from '../jobs/useJobsByDate';
-import Spinner from '../../ui/Spinner';
-import Empty from '../../ui/Empty';
-import { styled } from 'styled-components';
-import PayrollCalculationTable from './PayrollCalculationTable';
-import TableLegend from '../../ui/TableLegend';
-import { legendColors } from '../../utils/helpers';
-import { useWages } from '../settings/useWages';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { styled } from 'styled-components';
+
+// Components
+import Row from '../../ui/Row';
+import Empty from '../../ui/Empty';
+import Spinner from '../../ui/Spinner';
+import Heading from '../../ui/Heading';
 import InfoField from '../../ui/InfoField';
+import ButtonText from '../../ui/ButtonText';
+import TableLegend from '../../ui/TableLegend';
+import PayrollJobTable from './PayrollJobTable';
+import PayrollCalculationTable from './PayrollCalculationTable';
+
+// Helpers
+import { legendColors } from '../../utils/helpers';
+
+// Hooks
+import { useWages } from '../settings/useWages';
+import { useMoveBack } from '../../hooks/useMoveBack';
+import { useJobsByDate } from '../jobs/useJobsByDate';
 
 const PayrollDetailLayout = styled.div`
   display: grid;

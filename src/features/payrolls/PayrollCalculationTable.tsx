@@ -1,15 +1,21 @@
-import { JobType } from '../../types/collection';
+import { useEffect } from 'react';
 import { styled } from 'styled-components';
+
+// Components
+import HolidayCalculationBlock from './HolidayCalculationBlock';
+import GeneralCalculationBlock from './GeneralCalculationBlock';
+
+// Helpers
 import {
   calculateSalary,
   calculateSalaryOptions,
   extractWageData,
 } from '../../utils/salaryCalculationUtils';
 import { combinations } from '../../utils/helpers';
+
+// Types
 import { Wage } from '../../types';
-import HolidayCalculationBlock from './HolidayCalculationBlock';
-import GeneralCalculationBlock from './GeneralCalculationBlock';
-import { useEffect } from 'react';
+import { JobType } from '../../types/collection';
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);

@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import DashboardBox from './DashboardBox';
-import Heading from '../../ui/Heading';
 import {
   Area,
   AreaChart,
@@ -10,7 +8,15 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+
+// Components
+import DashboardBox from './DashboardBox';
+import Heading from '../../ui/Heading';
+
+// Context
 import { useDarkMode } from '../../context/DarkModeContext';
+
+// Types
 import { Job } from '../../types';
 
 const StyledSalesChart = styled(DashboardBox)`
@@ -57,6 +63,7 @@ const HoursChart = ({ jobs }: HoursChartProps) => {
     const totalHours = monthJobs
       .reduce((sum, job) => sum + job.total_hours, 0)
       .toFixed(2);
+
     const nightHours = monthJobs
       .reduce((sum, job) => sum + job.night_hours, 0)
       .toFixed(2);
@@ -68,16 +75,22 @@ const HoursChart = ({ jobs }: HoursChartProps) => {
     };
   });
 
+  // set y-Axis based on max total hours
+  const maxTotalHours = Math.max(
+    ...dataArray.map((item) => parseFloat(item.totalHours))
+  );
+  const roundedMaxTotalHours = Math.ceil(maxTotalHours / 5) * 5;
+
   const colors = isDarkMode
     ? {
         totalHours: { stroke: '#4f46e5', fill: '#4f46e5' },
-        nightHours: { stroke: '#ff9800', fill: '#ff9800' }, // New color for nightHours
+        nightHours: { stroke: '#ff9800', fill: '#ff9800' },
         text: '#e5e7eb',
         background: '#18212f',
       }
     : {
         totalHours: { stroke: '#4f46e5', fill: '#c7d2fe' },
-        nightHours: { stroke: '#ff9800', fill: '#ffc085' }, // New color for nightHours
+        nightHours: { stroke: '#ff9800', fill: '#ffc085' },
         text: '#374151',
         background: '#fff',
       };
@@ -96,6 +109,7 @@ const HoursChart = ({ jobs }: HoursChartProps) => {
           <YAxis
             tick={{ fill: colors.text }}
             tickLine={{ stroke: colors.text }}
+            domain={[0, roundedMaxTotalHours]}
           />
           <CartesianGrid strokeDasharray='4' />
           <Tooltip contentStyle={{ backgroundColor: colors.background }} />
@@ -117,59 +131,6 @@ const HoursChart = ({ jobs }: HoursChartProps) => {
           />
         </AreaChart>
       </ResponsiveContainer>
-      {/* <ResponsiveContainer height={300} width='100%'>
-        <AreaChart data={dataArray}>
-          <XAxis
-            dataKey='label'
-            tick={{ fill: colors.text }}
-            tickLine={{ stroke: colors.text }}
-          />
-
-          <CartesianGrid strokeDasharray='4' />
-          <Tooltip contentStyle={{ backgroundColor: colors.background }} />
-
-          <Area
-            dataKey='totalHours'
-            type='monotone'
-            stroke={colors.totalHours.stroke}
-            fill={colors.totalHours.fill}
-            strokeWidth={2}
-            name='Total hours'
-          />
-
-          <YAxis
-            yAxisId='left' // Specify the yAxisId
-            tick={{ fill: colors.text }}
-            tickLine={{ stroke: colors.text }}
-          />
-          <Area
-            dataKey='nightHours'
-            type='monotone'
-            stroke={colors.nightHours.stroke}
-            fill={colors.nightHours.fill}
-            strokeWidth={2}
-            name='Night hours'
-            yAxisId='left' // Use the same yAxisId as specified above
-          />
-
-          <YAxis
-            yAxisId='right' // Specify another yAxisId
-            orientation='right' // Position the yAxis on the right side
-            tick={{ fill: colors.text }}
-            tickLine={{ stroke: colors.text }}
-          /> */}
-      {/* Add another Area using the dataKey and yAxisId */}
-      {/* <Area
-      dataKey='anotherDataKey'
-      type='monotone'
-      stroke={colors.anotherData.stroke}
-      fill={colors.anotherData.fill}
-      strokeWidth={2}
-      name='Another Data'
-      yAxisId='right' // Use the same yAxisId as specified above
-    /> */}
-      {/* </AreaChart>
-      </ResponsiveContainer> */}
     </StyledSalesChart>
   );
 };

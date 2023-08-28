@@ -1,7 +1,6 @@
-import DeleteUser from '../features/authentication/DeleteUser';
+// Components
 import UpdatePasswordForm from '../features/authentication/UpdatePasswordForm';
 import UpdateUserDataForm from '../features/authentication/UpdateUserDataForm';
-import Button from '../ui/Button';
 import Heading from '../ui/Heading';
 import Row from '../ui/Row';
 

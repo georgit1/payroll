@@ -24,7 +24,6 @@ const Icon = styled.div`
   align-items: center;
   justify-content: center;
 
-  /* Make these dynamic, based on the received prop */
   background-color: var(--color-${(props) => props.color}-100);
 
   & svg {

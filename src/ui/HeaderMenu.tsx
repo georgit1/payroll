@@ -1,8 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
+import { HiOutlineUser } from 'react-icons/hi2';
+
+// Components
 import Logout from '../features/authentication/Logout';
 import ButtonIcon from './ButtonIcon';
-import { HiOutlineUser } from 'react-icons/hi2';
-import { useNavigate } from 'react-router-dom';
 import DarkModeToggle from './DarkModeToggle';
 
 const StyledHeaderMenu = styled.ul`

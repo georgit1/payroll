@@ -1,9 +1,15 @@
 import { styled } from 'styled-components';
+
+// Components
 import SmallCalendar from './SmallCalendar';
 import InsertJob from './InsertJob';
 import Button from '../../ui/Button';
 import TableLegend from '../../ui/TableLegend';
+
+// Helpers
 import { calendarLegendColors } from '../../utils/helpers';
+
+// Types
 import { WageType } from '../../types/collection';
 
 const StyledSidebar = styled.aside`

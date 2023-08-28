@@ -1,12 +1,18 @@
-import { JobType } from '../../types/collection';
+import { CSSProperties } from 'react';
+import { styled } from 'styled-components';
+
+// Components
 import Table from '../../ui/Table';
+
+// Helpers
 import {
   capitalizeFirstLetter,
   formatDate,
   removeTrailingZeros,
 } from '../../utils/helpers';
-import { CSSProperties } from 'react';
-import { styled } from 'styled-components';
+
+// Types
+import { JobType } from '../../types/collection';
 
 const Stacked = styled.div`
   display: flex;

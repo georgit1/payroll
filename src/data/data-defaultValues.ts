@@ -2,32 +2,6 @@ import { Settings, Wage } from '../types';
 
 export const defaultSettings: Settings = {
   role: 'jun',
-  // beginning_night_hours: '22:00',
-  // ending_night_hours: '05:00',
-  // holidays: {
-  //   dates: [],
-  //   fileName: '',
-  // },
-  // holiday_compensation: 0,
-  // insignificance_limit: 0,
-  // night_allowance: 0,
-  // vest_jun: 0,
-  // vest_jun_night: 0,
-  // vest_sen: 0,
-  // vest_sen_night: 0,
-  // suit_jun: 0,
-  // suit_jun_night: 0,
-  // suit_sen: 0,
-  // suit_sen_night: 0,
-  // vest_jun_holiday: 0,
-  // vest_jun_night_holiday: 0,
-  // vest_sen_holiday: 0,
-  // vest_sen_night_holiday: 0,
-  // suit_jun_holiday: 0,
-  // suit_jun_night_holiday: 0,
-  // suit_sen_holiday: 0,
-  // suit_sen_night_holiday: 0,
-  // night_holiday_surcharge: 0,
 };
 
 export const defaultWage: Wage = {

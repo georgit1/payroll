@@ -1,8 +1,14 @@
+import { ReactNode } from 'react';
 import { format } from 'date-fns';
-import { useCalendar } from '../../context/CalenderContext';
+
+// Components
 import Modal from '../../ui/Modal';
 import CreateJobForm from '../jobs/CreateJobForm';
-import { ReactNode } from 'react';
+
+// Context
+import { useCalendar } from '../../context/CalenderContext';
+
+// Types
 import { JobType } from '../../types/collection';
 
 type InsertJobProps = {

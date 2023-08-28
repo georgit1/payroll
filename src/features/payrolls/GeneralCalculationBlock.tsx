@@ -1,5 +1,9 @@
 import { styled } from 'styled-components';
+
+// Helpers
 import { capitalizeFirstLetter } from '../../utils/helpers';
+
+// Types
 import { WageDataGeneral } from '../../types';
 
 const CommonRow = styled.div`

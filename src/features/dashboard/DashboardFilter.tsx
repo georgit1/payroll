@@ -1,4 +1,7 @@
+// Components
 import SortBy from '../../ui/SortBy';
+
+// Hooks
 import { useJobs } from '../jobs/useJobs';
 
 const DashboardFilter = () => {

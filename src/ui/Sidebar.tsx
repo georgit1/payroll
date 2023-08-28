@@ -1,4 +1,6 @@
 import { styled } from 'styled-components';
+
+// Components
 import Logo from './Logo';
 import MainNav from './MainNav';
 

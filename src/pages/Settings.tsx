@@ -1,6 +1,7 @@
-import UpdateSettingsForm from '../features/settings/updateSettingsForm';
-import Heading from '../ui/Heading';
+// Components
 import Row from '../ui/Row';
+import Heading from '../ui/Heading';
+import UpdateSettingsForm from '../features/settings/updateSettingsForm';
 
 const Settings = () => {
   return (

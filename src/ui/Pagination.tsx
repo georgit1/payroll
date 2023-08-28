@@ -1,6 +1,8 @@
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
 import { useSearchParams } from 'react-router-dom';
+import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
 import styled from 'styled-components';
+
+// Constants
 import { PAGE_SIZE } from '../utils/constants';
 
 type PaginationButtonProps = {

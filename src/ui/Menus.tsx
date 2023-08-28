@@ -1,3 +1,5 @@
+import { createPortal } from 'react-dom';
+import { HiEllipsisVertical } from 'react-icons/hi2';
 import {
   ReactNode,
   createContext,
@@ -6,9 +8,9 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react';
-import { createPortal } from 'react-dom';
-import { HiEllipsisVertical } from 'react-icons/hi2';
 import styled from 'styled-components';
+
+// Hooks
 import { useOutsideClick } from '../hooks/useOutsideClick';
 
 type StyledListProps = {

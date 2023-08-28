@@ -1,3 +1,12 @@
+// Helpers
+import {
+  capitalizeFirstLetter,
+  getHoursByDresscodeAndRole,
+  toCamelCase,
+  toPascalCase,
+} from './helpers';
+
+// Types
 import {
   Combination,
   ExtractWageData,
@@ -7,13 +16,6 @@ import {
   SalaryOptions as SalaryOptionsType,
   Wage,
 } from '../types';
-
-import {
-  capitalizeFirstLetter,
-  getHoursByDresscodeAndRole,
-  toCamelCase,
-  toPascalCase,
-} from './helpers';
 
 // initialze total hours for all combinations
 export const initializeSalaryOptions = (): SalaryOptionsType => {

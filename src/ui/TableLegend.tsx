@@ -1,3 +1,18 @@
+// unfortunately styled components don't work
+const colorCircleStyle = {
+  width: '12px',
+  height: '12px',
+  borderRadius: '50%',
+  border: '2px solid var(--color-grey-200)',
+  marginRight: '5px',
+};
+
+const legendItemStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  marginRight: '16px',
+};
+
 type ColorItem = {
   color: string;
   label: string;
@@ -12,22 +27,11 @@ const TableLegend = ({ colors }: TableLegendProps) => {
     <div>
       <div style={{ display: 'flex' }}>
         {colors.map((colorItem, index) => (
-          <div
-            key={index}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginRight: '16px',
-            }}
-          >
+          <div style={legendItemStyle} key={index}>
             <div
               style={{
-                width: '12px',
-                height: '12px',
-                borderRadius: '50%',
+                ...colorCircleStyle,
                 backgroundColor: colorItem.color,
-                border: '2px solid var(--color-grey-200)',
-                marginRight: '5px',
               }}
             />
             <span>{colorItem.label}</span>

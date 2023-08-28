@@ -1,6 +1,9 @@
+// Components
 import Button from '../../ui/Button';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 import Modal from '../../ui/Modal';
+
+// Hooks
 import { useDeleteUser } from './useDeleteUser';
 
 const DeleteUser = () => {

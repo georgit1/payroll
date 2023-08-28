@@ -1,9 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
-import { updateWage as updateWageApi } from '../../services/apiWage';
+
+// Hooks
 import { useUser } from '../authentication/useUser';
+
+// Services
+import { updateWage as updateWageApi } from '../../services/apiWage';
+
+// Types
 import { WageType } from '../../types/collection';
-// import { useEffect } from 'react';
 
 export const useUpdateWage = (selctedYear: string) => {
   const queryClient = useQueryClient();
@@ -20,11 +25,6 @@ export const useUpdateWage = (selctedYear: string) => {
     },
     onError: (err: Error) => toast.error(err.message),
   });
-
-  // Manually revalidate the query when the year changes
-  // useEffect(() => {
-  //   queryClient.invalidateQueries(['wage', selctedYear]);
-  // }, [selctedYear, queryClient]);
 
   return {
     isUpdating,

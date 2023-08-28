@@ -113,18 +113,8 @@ const GlobalStyles = createGlobalStyle`
 --image-opacity: 90%;
   }
   
-  /* Indigo */
-  /* --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81; */
-
-  /* Se2 */
-    --color-brand-50: #f0fdf3;
+  /* brand colors */
+  --color-brand-50: #f0fdf3;
   --color-brand-100: #dbfde3;
   --color-brand-200: #baf8c9;
   --color-brand-500: #1fc84a;

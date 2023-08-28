@@ -1,6 +1,7 @@
-import PayrollsLayout from '../features/payrolls/PayrollsLayout';
-import Heading from '../ui/Heading';
+// Components
 import Row from '../ui/Row';
+import Heading from '../ui/Heading';
+import PayrollsLayout from '../features/payrolls/PayrollsLayout';
 
 const Payrolls = () => {
   return (

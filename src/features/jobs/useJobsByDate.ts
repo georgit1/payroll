@@ -1,7 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { getJobsByDate } from '../../services/apiJobs';
+
+// Hooks
 import { useUser } from '../authentication/useUser';
+
+// Services
+import { getJobsByDate } from '../../services/apiJobs';
 
 export const useJobsByDate = () => {
   const { user } = useUser();

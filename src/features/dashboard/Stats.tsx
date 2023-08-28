@@ -2,13 +2,19 @@ import { HiOutlineBanknotes } from 'react-icons/hi2';
 import { AiOutlinePercentage } from 'react-icons/ai';
 import { TbSum } from 'react-icons/tb';
 import { GiPayMoney } from 'react-icons/gi';
+
+// Components
 import Stat from '../../ui/Stat';
-import { Job, Wage } from '../../types';
+
+// Helpers
 import {
   calculateSalary,
   calculateSalaryOptions,
 } from '../../utils/salaryCalculationUtils';
 import { combinations, groupDataByMonth } from '../../utils/helpers';
+
+// Types
+import { Job, Wage } from '../../types';
 
 type StatsProps = {
   jobs: Job[];

@@ -1,10 +1,16 @@
 import { styled } from 'styled-components';
-import Spinner from '../../ui/Spinner';
-import { combinations, groupDataByMonth } from '../../utils/helpers';
-import { useJobs } from '../jobs/useJobs';
-import Payroll from './Payroll';
+
+// Components
 import Empty from '../../ui/Empty';
+import Payroll from './Payroll';
+import Spinner from '../../ui/Spinner';
+
+// Hooks
+import { useJobs } from '../jobs/useJobs';
 import { useWages } from '../settings/useWages';
+
+// Helpers
+import { combinations, groupDataByMonth } from '../../utils/helpers';
 import {
   calculateSalary,
   calculateSalaryOptions,
