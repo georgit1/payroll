@@ -56,7 +56,7 @@ const HoursChart = ({ jobs }: HoursChartProps) => {
     const monthLabel = months[monthKey];
     const monthJobs = jobs.filter((job) => {
       if (job.date) {
-        return job.date.startsWith(`${jobs[0]?.date?.slice(0, 4) || ""}-${monthKey}`);
+        return job.date.startsWith(`${jobs[0]?.date?.slice(0, 4)}-${monthKey}`);
       }
     });
 
@@ -97,7 +97,9 @@ const HoursChart = ({ jobs }: HoursChartProps) => {
 
   return (
     <StyledSalesChart>
-      <Heading as='h2'>{`Job Hours ${jobs[0]?.date?.slice(0, 4)}`}</Heading>
+      <Heading as='h2'>{`Job Hours ${
+        jobs[0]?.date?.slice(0, 4) || ''
+      }`}</Heading>
 
       <ResponsiveContainer height={300} width='100%'>
         <AreaChart data={dataArray}>

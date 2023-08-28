@@ -82,7 +82,9 @@ const NumJobsChart = ({ jobs }: NumJobsChartProps) => {
 
   return (
     <StyledNumJobsChart>
-      <Heading as='h2'>{`Number Jobs ${jobs[0]?.date?.slice(0, 4) || ""}`}</Heading>
+      <Heading as='h2'>{`Number Jobs ${
+        jobs[0]?.date?.slice(0, 4) || ''
+      }`}</Heading>
 
       <ResponsiveContainer height={300} width='100%'>
         <AreaChart data={dataArray}>
