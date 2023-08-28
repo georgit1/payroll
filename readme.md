@@ -19,4 +19,4 @@ Welcome to the Payroll App repository! This application allows you to manage min
 
 ## Demo
 
-Check out the [live demo](minor-jobs-payroll.netlify.app) to explore the features of the Payroll App.
+Check out the [live demo](https://minor-jobs-payroll.netlify.app/) to explore the features of the Payroll App.
