@@ -17,4 +17,6 @@ Welcome to the Payroll App repository! This application allows you to manage min
 4. View your calculated monthly salaries and track financial data.
 5. Explore the dashboard to analyze yearly trends.
 
-## Demo Link
+## Demo
+
+Check out the [live demo](minor-jobs-payroll.netlify.app) to explore the features of the Payroll App.
