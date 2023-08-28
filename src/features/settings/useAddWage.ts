@@ -16,8 +16,6 @@ export const useAddWage = () => {
   const { user } = useUser();
   const userId = user?.id as string;
 
-  console.log('added');
-
   const { mutate: addWage, isLoading: isAdding } = useMutation({
     mutationFn: (newWage: Partial<WageType>) =>
       addWageApi({ ...newWage, user_id: userId } as WageType),
