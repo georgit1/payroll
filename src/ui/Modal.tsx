@@ -1,6 +1,6 @@
 import { HiXMark } from 'react-icons/hi2';
 import { createPortal } from 'react-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import {
   cloneElement,
   createContext,
@@ -13,6 +13,17 @@ import {
 // Hooks
 import { useOutsideClick } from '../hooks/useOutsideClick';
 
+const fadeIn = keyframes`
+  from {
+    transform: translate(-50%, -60%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+`;
+
 const StyledModal = styled.div`
   position: fixed;
   top: 50%;
@@ -23,6 +34,7 @@ const StyledModal = styled.div`
   box-shadow: var(--shadow-lg);
   padding: 3.2rem 4rem;
   transition: all 0.5s;
+  animation: ${fadeIn} 0.3s ease-out;
 `;
 
 const Overlay = styled.div`
