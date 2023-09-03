@@ -12,7 +12,6 @@ import FormRow from '../../ui/FormRow';
 import Select from '../../ui/Select';
 import Checkbox from '../../ui/Checkbox';
 
-
 // Hooks
 import { useAddJob } from './useAddJob';
 import { useEditJob } from './useEditJob';
@@ -107,16 +106,16 @@ const CreateJobForm = ({
     if (jobAlreadyExists && !isOldJob)
       return toast.error('Job already exists on this date');
 
-    if (isEditSession) {
-      // calculate total hours and night hours
-      const { check_in, check_out } = data;
-      const { totalHours, nightHours } = calculateHours(
-        check_in,
-        check_out,
-        currentWage?.beginning_night_hours,
-        currentWage?.ending_night_hours
-      );
+    // calculate total hours and night hours
+    const { check_in, check_out } = data;
+    const { totalHours, nightHours } = calculateHours(
+      check_in,
+      check_out,
+      currentWage?.beginning_night_hours,
+      currentWage?.ending_night_hours
+    );
 
+    if (isEditSession) {
       editJob(
         {
           newJobData: {
@@ -143,14 +142,7 @@ const CreateJobForm = ({
       );
     } else {
       if (!user) throw new Error('user not available');
-      // calculate total hours and night hours
-      const { check_in, check_out } = data;
-      const { totalHours, nightHours } = calculateHours(
-        check_in,
-        check_out,
-        currentWage?.beginning_night_hours,
-        currentWage?.ending_night_hours
-      );
+
       const dresscode = data?.dresscode.toLowerCase();
 
       addJob(
