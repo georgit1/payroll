@@ -87,13 +87,21 @@ export const getJobsByDate = async (
   userId: string
 ) => {
   const startDate = new Date(year, month - 1, 1);
-  const endDate = new Date(year, month, 0);
+  const endDate = new Date(
+    year,
+    month - 1,
+    new Date(year, month, 0).getDate(),
+    23,
+    59,
+    59,
+    999
+  );
 
   const { data, error } = await supabase
     .from('jobs')
     .select('*')
     .eq('user_id', userId)
-    .gte('date', startDate.toISOString())
+    .gt('date', startDate.toISOString())
     .lte('date', endDate.toISOString())
     .order('date');
 
