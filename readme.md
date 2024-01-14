@@ -1,5 +1,7 @@
 # Payroll App
 
+![Payroll Mockups](/public/mockups.png)
+
 Welcome to the Payroll App repository! This application allows you to manage minor jobs, track salaries, and view financial data using a user-friendly calendar interface and an insightful dashboard.
 
 ## Features
